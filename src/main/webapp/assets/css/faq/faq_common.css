@@ -1,0 +1,58 @@
+/* reset */
+body,
+p,h3, h2, h1 {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+ul,
+li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+/* faq list-box */
+
+
+#minho-faq .list-box-t {
+    margin-bottom: 200px;
+}
+
+#minho-faq .list-box-menu {
+    border-top: 2px solid #e83828;
+    padding: 20px 10px 20px 0;
+}
+
+#minho-faq .list-box-menu li {
+    margin-top: 15px;
+}
+
+#minho-faq .list-box-menu li a {
+    color: #787878;
+}
+
+#minho-faq .list-box-menu li a:hover {
+    color: #e83828;
+}
+
+
+#minho-faq .list-box-b div {
+    margin-bottom: 100px;
+    gap: 5px;
+}
+
+#minho-faq .list-box-info {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    border-top: 2px solid #e83828;
+    color: #787878;
+}
+
+#minho-faq .list-box-b strong {
+    color: #e83828
+}

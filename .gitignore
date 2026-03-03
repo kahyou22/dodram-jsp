@@ -1,1 +1,5 @@
 /build/
+local.env
+
+# macOS
+.DS_Store
