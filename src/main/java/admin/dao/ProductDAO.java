@@ -27,29 +27,29 @@ public class ProductDAO {
                 Arrays.asList("/img/test.gif", "/img/test.gif"), ts1, ts1));
         products.add(new ProductDTO(1000001664, 1, "도드람한돈 목심 에어프라이어용 500g",
                 "에어프라이어로 간편하게 조리 가능한 도드람한돈 프리미엄 목심.", 16000, "ACTIVE",
-                "/img/products/1000001664_main_04.jpg", "국내산(돼지고기)", 500,
-                Arrays.asList("/img/products/6692560fe610a50de8da40bb5c6f8cff_144342.png"), ts2, ts2));
+                "/img/product/1000001664_main_04.jpg", "국내산(돼지고기)", 500,
+                Arrays.asList("/img/product/6692560fe610a50de8da40bb5c6f8cff_144342.png"), ts2, ts2));
         products.add(new ProductDTO(1000000565, 1, "도드람한돈 칼집구이용 삼겹살 500g",
                 "칼집을 넣어 부드럽고 맛있게 구워지는 도드람한돈 삼겹살.", 18500, "ACTIVE",
-                "/img/products/1000000565_main_069.jpg", "국내산(돼지고기)", 500,
-                Arrays.asList("/img/products/3f8e7d2f132144127fd9b42e10e36bdd_134024.png"), ts2, ts2));
+                "/img/product/1000000565_main_069.jpg", "국내산(돼지고기)", 500,
+                Arrays.asList("/img/product/3f8e7d2f132144127fd9b42e10e36bdd_134024.png"), ts2, ts2));
         products.add(new ProductDTO(1000001661, 1, "도드람한돈 목심바비큐용 500g",
                 "바비큐에 최적화된 두툼한 도드람한돈 목심.", 17000, "ACTIVE",
-                "/img/products/1000001661_main_082.jpg", "국내산(돼지고기)", 500,
-                Arrays.asList("/img/products/5304b775a41b3538f78dea57d1998cf1_143935.png"), ts2, ts2));
+                "/img/product/1000001661_main_082.jpg", "국내산(돼지고기)", 500,
+                Arrays.asList("/img/product/5304b775a41b3538f78dea57d1998cf1_143935.png"), ts2, ts2));
         products.add(new ProductDTO(1000001660, 1, "도드람한돈 삼겹살 바비큐용 500g",
                 "야외 바비큐에 꼭 맞는 프리미엄 도드람한돈 삼겹살.", 15000, "ACTIVE",
-                "/img/products/1000001660_main_06.jpg", "국내산(돼지고기)", 500,
-                Arrays.asList("/img/products/f12986c60ed5927d63f854b22ab61e3f_143906.png"), ts2, ts2));
+                "/img/product/1000001660_main_06.jpg", "국내산(돼지고기)", 500,
+                Arrays.asList("/img/product/f12986c60ed5927d63f854b22ab61e3f_143906.png"), ts2, ts2));
         products.add(new ProductDTO(1000001137, 1, "도드람한돈 토시살(칼집) 400g",
                 "칼집이 들어간 부드러운 도드람한돈 토시살. 구이용 최적.", 8900, "ACTIVE",
-                "/img/products/1000001137_main_067.jpg", "국내산(돼지고기)", 400,
-                Arrays.asList("/img/products/9d7a15029bbb0f15d51b9ec60fb560db_143815.png"), ts2, ts2));
+                "/img/product/1000001137_main_067.jpg", "국내산(돼지고기)", 400,
+                Arrays.asList("/img/product/9d7a15029bbb0f15d51b9ec60fb560db_143815.png"), ts2, ts2));
 
         products.add(new ProductDTO(1000000515, 2, "한우 등심 300g",
                 "마블링 풍부한 프리미엄 한우 등심. 구이용 최적.", 31500, "ACTIVE",
-                "/img/products/1000000515_main.jpg", "국내산(한우)", 300,
-                Arrays.asList("/img/products/1000000515_detail.png"), ts3, ts3));
+                "/img/product/1000000515_main.jpg", "국내산(한우)", 300,
+                Arrays.asList("/img/product/1000000515_detail.png"), ts3, ts3));
         products.add(new ProductDTO(1000000514, 2, "한우 불고기 300g",
                 "부드럽고 달콤한 한우 불고기용.", 14100, "DISCONTINUED",
                 null, "국내산(한우)", 300,
@@ -65,12 +65,12 @@ public class ProductDAO {
 
         products.add(new ProductDTO(1000001851, 5, "도드람한돈 4구 삼목세트",
                 "삼겹살과 목심이 함께 구성된 프리미엄 선물세트.", 75000, "ACTIVE",
-                "/img/products/1000001851_main.png", "국내산(돼지고기)", 2000,
-                Arrays.asList("/img/products/1000001851_detail.png"), ts4, ts4));
+                "/img/product/1000001851_main.png", "국내산(돼지고기)", 2000,
+                Arrays.asList("/img/product/1000001851_detail.png"), ts4, ts4));
         products.add(new ProductDTO(1000000158, 5, "도드람한돈 으뜸구이세트2호",
                 "구이용으로 최적화된 도드람한돈 프리미엄 선물세트.", 70000, "ACTIVE",
-                "/img/products/1000000158_main.png", "국내산(돼지고기)", 1600,
-                Arrays.asList("/img/products/1000000158_detail.png"), ts4, ts4));
+                "/img/product/1000000158_main.png", "국내산(돼지고기)", 1600,
+                Arrays.asList("/img/product/1000000158_detail.png"), ts4, ts4));
     }
 
     public static ProductDAO getInstance() { return INSTANCE; }
