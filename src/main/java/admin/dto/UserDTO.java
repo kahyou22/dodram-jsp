@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 사용자 정보를 담는 DTO
+ * 사용자 정보를 담는 DTO (members 테이블과 매핑)
  */
 @Getter
 @Setter
@@ -14,10 +14,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDTO {
 
-    private int userNumber;
-    private String userName;
-    private String name;
-    private String email;
-    private String phoneNumber;
-    private long createdAt;
+    private long userNumber;   // user_num
+    private String userName;   // id
+    private String name;       // name
+    private String email;      // email
+    private String phoneNumber; // phone
+    private String createdAt;  // created_at (DATETIME → String)
 }
