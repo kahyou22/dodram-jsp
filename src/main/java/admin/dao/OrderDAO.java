@@ -1,5 +1,6 @@
 package admin.dao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -130,7 +131,12 @@ public class OrderDAO {
 
         for (OrderItemDTO it : order.getItems()) {
             OrderItemDTO ei = new OrderItemDTO(it.getProductNumber(), it.getQuantity());
-            ProductDTO product = pd.findByNumber(it.getProductNumber());
+            ProductDTO product = null;
+            try {
+                product = pd.findByNumber(it.getProductNumber());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             String productName = product != null ? product.getName() : "삭제된 상품";
             int price = product != null ? product.getPrice() : 0;
