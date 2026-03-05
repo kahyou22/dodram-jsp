@@ -2,135 +2,109 @@ package admin.dao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import admin.dto.OrderDTO;
 import admin.dto.OrderItemDTO;
 import admin.dto.ProductDTO;
+import util.DBUtil;
 
 /**
- * 주문 DAO
+ * 주문 DAO - DB 연동 (orders + order_items 테이블)
  */
 public class OrderDAO {
 
     private static final OrderDAO INSTANCE = new OrderDAO();
-    private final List<OrderDTO> orders = new ArrayList<>();
 
-    private OrderDAO() {
-        orders.add(makeOrder(1001, "2026-01-10", "DELIVERED",
-                "정문주", "010-1234-5678", "kahyou222@gmail.com",
-                "정문주", "010-1234-5678", "서울특별시 강남구 테헤란로 123, 4층 401호",
-                Arrays.asList(item(1000001664, 2), item(1000000565, 1))));
-        orders.add(makeOrder(1002, "2026-01-12", "DELIVERED",
-                "조휘일", "010-9876-5432", "whyeil@naver.com",
-                "조휘일", "010-9876-5432", "경기도 성남시 분당구 판교역로 235, 7층",
-                Arrays.asList(item(1000000565, 1))));
-        orders.add(makeOrder(1003, "2026-01-15", "CANCELLED",
-                "이름4", "010-2222-3333", "user4@jfs.rf.gd",
-                "이름4", "010-2222-3333", "부산광역시 해운대구 우동 센텀중앙로 48, 12층",
-                Arrays.asList(item(1000001661, 1), item(1000001660, 2), item(1000001137, 1))));
-        orders.add(makeOrder(1004, "2026-01-18", "SHIPPING_IN_PROGRESS",
-                "정문주", "010-1234-5678", "kahyou222@gmail.com",
-                "김민수", "010-5555-7777", "대전광역시 유성구 대학로 99, 과학기술원 기숙사 B동 305호",
-                Arrays.asList(item(1000001660, 1))));
-        orders.add(makeOrder(1005, "2026-01-20", "PREPARING_PRODUCT",
-                "름이5", "010-4444-8888", "user5@jfs.rf.gd",
-                "박영희", "010-6666-9999", "인천광역시 연수구 송도과학로 32, 송도타워 15층",
-                Arrays.asList(item(1000001137, 2), item(1000000515, 1))));
-        orders.add(makeOrder(1006, "2026-01-22", "PAYMENT_PENDING",
-                "이름6", "010-3333-1111", "user6@jfs.rf.gd",
-                "이름6", "010-3333-1111", "대구광역시 수성구 들안로 67, 수성아파트 102동 803호",
-                Arrays.asList(item(1000000515, 1))));
-        orders.add(makeOrder(1007, "2026-01-25", "SHIPPING_PENDING",
-                "조휘일", "010-9876-5432", "whyeil@naver.com",
-                "조부모님", "010-7777-2222", "전라남도 순천시 장천로 51, 순천만아파트 3동 201호",
-                Arrays.asList(item(1000001851, 1))));
-        orders.add(makeOrder(1008, "2026-01-28", "RETURN_REQUESTED",
-                "름이7", "010-8888-4444", "user7@jfs.rf.gd",
-                "름이7", "010-8888-4444", "경기도 고양시 일산동구 중앙로 1036, 웨스턴돔 B1층",
-                Arrays.asList(item(1000000158, 1), item(1000001664, 3))));
-        orders.add(makeOrder(1009, "2026-02-01", "CANCEL_REQUESTED",
-                "이름8", "010-1111-5555", "user8@jfs.rf.gd",
-                "이름8", "010-1111-5555", "울산광역시 남구 삼산로 282, 삼산타운 5동 1501호",
-                Arrays.asList(item(1, 5))));
-        orders.add(makeOrder(1010, "2026-02-05", "DELIVERED",
-                "정문주", "010-1234-5678", "kahyou222@gmail.com",
-                "정문주", "010-1234-5678", "서울특별시 강남구 테헤란로 123, 4층 401호",
-                Arrays.asList(item(1000001664, 1), item(1000001661, 1),
-                        item(1000001660, 1), item(1000001137, 1))));
-    }
+    private OrderDAO() {}
 
     public static OrderDAO getInstance() { return INSTANCE; }
 
-    private static OrderItemDTO item(int productNumber, int quantity) {
-        return new OrderItemDTO(productNumber, quantity);
+    /** orders 테이블 → OrderDTO RowMapper */
+    private static final util.RowMapper<OrderDTO> ORDER_MAPPER = rs -> {
+        OrderDTO o = new OrderDTO();
+        o.setOrderNumber(rs.getLong("order_num"));
+        o.setOrderDate(rs.getString("order_date"));
+        o.setOrderState(rs.getString("order_state"));
+        o.setOrdererName(rs.getString("orderer_name"));
+        o.setOrdererPhone(rs.getString("orderer_phone"));
+        o.setOrdererEmail(rs.getString("orderer_email"));
+        o.setReceiverName(rs.getString("receiver_name"));
+        o.setReceiverPhone(rs.getString("receiver_phone"));
+        o.setReceiverAddress(rs.getString("receiver_address"));
+        return o;
+    };
+
+    /** order_items 테이블 → OrderItemDTO RowMapper */
+    private static final util.RowMapper<OrderItemDTO> ITEM_MAPPER = rs -> {
+        OrderItemDTO item = new OrderItemDTO();
+        item.setProductNumber(rs.getLong("product_num"));
+        item.setQuantity(rs.getInt("quantity"));
+        item.setUnitPrice(rs.getInt("unit_price"));
+        return item;
+    };
+
+    /** 주문의 항목 목록 조회 */
+    private List<OrderItemDTO> getItems(long orderNumber) throws SQLException {
+        String sql = "SELECT product_num, quantity, unit_price FROM order_items WHERE order_num = ? ORDER BY item_id";
+        return DBUtil.executeQuery(sql, ps -> {
+            ps.setLong(1, orderNumber);
+        }, ITEM_MAPPER);
     }
 
-    private static OrderDTO makeOrder(int orderNumber, String orderDate, String orderState,
-                                      String ordererName, String ordererPhone, String ordererEmail,
-                                      String receiverName, String receiverPhone, String receiverAddress,
-                                      List<OrderItemDTO> items) {
-        OrderDTO o = new OrderDTO();
-        o.setOrderNumber(orderNumber);
-        o.setOrderDate(orderDate);
-        o.setOrderState(orderState);
-        o.setOrdererName(ordererName);
-        o.setOrdererPhone(ordererPhone);
-        o.setOrdererEmail(ordererEmail);
-        o.setReceiverName(receiverName);
-        o.setReceiverPhone(receiverPhone);
-        o.setReceiverAddress(receiverAddress);
-        o.setItems(items);
+    /** 전체 주문 목록 (항목 포함) */
+    public List<OrderDTO> getAll() throws SQLException {
+        String sql = "SELECT order_num, order_date, order_state, orderer_name, orderer_phone, orderer_email, "
+                   + "receiver_name, receiver_phone, receiver_address FROM orders ORDER BY order_num";
+        List<OrderDTO> list = DBUtil.executeQuery(sql, null, ORDER_MAPPER);
+        for (OrderDTO o : list) {
+            o.setItems(getItems(o.getOrderNumber()));
+        }
+        return list;
+    }
+
+    /** 주문 번호로 조회 (항목 포함) */
+    public OrderDTO findByOrderNumber(long orderNumber) throws SQLException {
+        String sql = "SELECT order_num, order_date, order_state, orderer_name, orderer_phone, orderer_email, "
+                   + "receiver_name, receiver_phone, receiver_address FROM orders WHERE order_num = ?";
+        List<OrderDTO> list = DBUtil.executeQuery(sql, ps -> {
+            ps.setLong(1, orderNumber);
+        }, ORDER_MAPPER);
+        if (list.isEmpty()) return null;
+        OrderDTO o = list.get(0);
+        o.setItems(getItems(o.getOrderNumber()));
         return o;
     }
 
-    public List<OrderDTO> getAll() {
-        return Collections.unmodifiableList(orders);
-    }
-
-    public OrderDTO findByOrderNumber(int orderNumber) {
-        return orders.stream()
-                .filter(o -> o.getOrderNumber() == orderNumber)
-                .findFirst().orElse(null);
-    }
-
     /** 상품 정보를 조인한 enriched 목록 */
-    public List<OrderDTO> getAllEnriched() {
-        ProductDAO pd = ProductDAO.getInstance();
+    public List<OrderDTO> getAllEnriched() throws SQLException {
+        List<OrderDTO> orders = getAll();
         List<OrderDTO> result = new ArrayList<>();
         for (OrderDTO order : orders) {
-            result.add(enrich(order, pd));
+            result.add(enrich(order));
         }
         return result;
     }
 
     /** 단일 주문 enriched */
-    public OrderDTO findEnriched(int orderNumber) {
+    public OrderDTO findEnriched(long orderNumber) throws SQLException {
         OrderDTO order = findByOrderNumber(orderNumber);
         if (order == null) return null;
-        return enrich(order, ProductDAO.getInstance());
+        return enrich(order);
     }
 
-    private OrderDTO enrich(OrderDTO order, ProductDAO pd) {
-        OrderDTO enriched = new OrderDTO();
-        enriched.setOrderNumber(order.getOrderNumber());
-        enriched.setOrderDate(order.getOrderDate());
-        enriched.setOrderState(order.getOrderState());
-        enriched.setOrdererName(order.getOrdererName());
-        enriched.setOrdererPhone(order.getOrdererPhone());
-        enriched.setOrdererEmail(order.getOrdererEmail());
-        enriched.setReceiverName(order.getReceiverName());
-        enriched.setReceiverPhone(order.getReceiverPhone());
-        enriched.setReceiverAddress(order.getReceiverAddress());
+    /** 주문에 상품 정보를 조인 (enriched 필드 채우기) */
+    private OrderDTO enrich(OrderDTO order) {
+        ProductDAO pd = ProductDAO.getInstance();
 
         List<OrderItemDTO> enrichedItems = new ArrayList<>();
         int totalQuantity = 0;
         int totalAmount = 0;
 
         for (OrderItemDTO it : order.getItems()) {
-            OrderItemDTO ei = new OrderItemDTO(it.getProductNumber(), it.getQuantity());
+            OrderItemDTO ei = new OrderItemDTO(it.getProductNumber(), it.getQuantity(), it.getUnitPrice());
+
+            // 상품 정보 조인
             ProductDTO product = null;
             try {
                 product = pd.findByNumber(it.getProductNumber());
@@ -139,11 +113,11 @@ public class OrderDAO {
             }
 
             String productName = product != null ? product.getName() : "삭제된 상품";
-            int price = product != null ? product.getPrice() : 0;
-            int subtotal = price * it.getQuantity();
+            int unitPrice = it.getUnitPrice();
+            int subtotal = unitPrice * it.getQuantity();
 
             ei.setProductName(productName);
-            ei.setPrice(price);
+            ei.setPrice(unitPrice);
             ei.setSubtotal(subtotal);
             if (product != null) {
                 ei.setThumbnailImage(product.getThumbnailImage());
@@ -163,23 +137,29 @@ public class OrderDAO {
                 ? firstName + " 외 " + otherCount + "건"
                 : firstName;
 
-        enriched.setItems(enrichedItems);
-        enriched.setOrderName(orderName);
-        enriched.setTotalQuantity(totalQuantity);
-        enriched.setTotalAmount(totalAmount);
-        return enriched;
+        order.setItems(enrichedItems);
+        order.setOrderName(orderName);
+        order.setTotalQuantity(totalQuantity);
+        order.setTotalAmount(totalAmount);
+        return order;
     }
 
     /** 주문 상태 변경 */
-    public boolean updateState(int orderNumber, String newState) {
-        OrderDTO order = findByOrderNumber(orderNumber);
-        if (order == null) return false;
-        order.setOrderState(newState);
-        return true;
+    public boolean updateState(long orderNumber, String newState) throws SQLException {
+        String sql = "UPDATE orders SET order_state = ? WHERE order_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setString(1, newState);
+            ps.setLong(2, orderNumber);
+        });
+        return rows > 0;
     }
 
-    /** 주문 삭제 */
-    public boolean delete(int orderNumber) {
-        return orders.removeIf(o -> o.getOrderNumber() == orderNumber);
+    /** 주문 삭제 (order_items는 ON DELETE CASCADE로 자동 삭제) */
+    public boolean delete(long orderNumber) throws SQLException {
+        String sql = "DELETE FROM orders WHERE order_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setLong(1, orderNumber);
+        });
+        return rows > 0;
     }
 }
