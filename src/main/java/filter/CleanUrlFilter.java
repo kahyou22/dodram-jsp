@@ -4,11 +4,13 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 확장자 없는 URL을 해당 JSP로 포워딩하는 필터
  * 예: /about -> /about.jsp, /member/login -> /member/login.jsp
- * 서블릿이 등록되면 서블릿이 우선 처리되므로 자연스럽게 전환 가능
+ * 서블릿이 등록된 URL은 서블릿이 우선 처리됨
  *
  * UTF-8 인코딩 처리도 함께 수행
  */
@@ -16,10 +18,17 @@ import java.io.IOException;
 public class CleanUrlFilter implements Filter {
 
     private ServletContext servletContext;
+    private Set<String> servletMappings;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
+
+        // 등록된 서블릿의 URL 매핑을 수집 (서블릿이 등록된 URL은 JSP 포워딩하지 않음)
+        this.servletMappings = new HashSet<>();
+        for (ServletRegistration reg : servletContext.getServletRegistrations().values()) {
+            servletMappings.addAll(reg.getMappings());
+        }
     }
 
     @Override
@@ -52,6 +61,12 @@ public class CleanUrlFilter implements Filter {
         // 이미 확장자가 있는 요청 (.jsp, .css, .js 등)은 그대로 통과
         String lastSegment = path.substring(path.lastIndexOf('/') + 1);
         if (lastSegment.contains(".")) {
+            chain.doFilter(req, res);
+            return;
+        }
+
+        // 서블릿이 등록된 URL이면 서블릿이 처리하도록 통과
+        if (servletMappings.contains(path)) {
             chain.doFilter(req, res);
             return;
         }
