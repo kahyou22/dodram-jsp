@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 카테고리 정보를 담는 DTO
+ * 카테고리 정보를 담는 DTO (categories 테이블과 매핑)
  */
 @Getter
 @Setter
@@ -14,9 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CategoryDTO {
 
-    private int categoryNumber;
-    private String name;
-    private String description;
-    private String icon;
-    private long createdAt;
+    private int categoryNumber;  // category_num
+    private String name;         // name
+    private String description;  // description
+    private String icon;         // icon
+    private String createdAt;    // created_at (DATETIME → String)
 }

@@ -3,13 +3,20 @@
 const userDetail = window.userDetail || null;
 
 /**
- * UTC timestamp를 YYYY-MM-DD HH:mm 형식으로 변환
- * @param {number} timestamp - UTC 타임스탬프
+ * 날짜를 YYYY-MM-DD HH:mm 형식으로 변환
+ * DB DATETIME 문자열 또는 UTC timestamp 모두 지원
+ * @param {string|number} value - DB DATETIME 문자열 또는 UTC 타임스탬프
  * @returns {string} 포맷된 날짜 문자열
  */
-function formatDateTime(timestamp) {
-  if (!timestamp) return "";
-  const date = new Date(timestamp);
+function formatDateTime(value) {
+  if (!value) return "";
+  // DB DATETIME 문자열인 경우 (예: "2025-01-01 00:00:00")
+  if (typeof value === "string") {
+    // "YYYY-MM-DD HH:mm:ss" → "YYYY-MM-DD HH:mm"
+    return value.substring(0, 16);
+  }
+  // timestamp(number)인 경우 (레거시 호환)
+  const date = new Date(value);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -28,9 +35,11 @@ function initPage() {
   // 타임스탬프 요소들 포맷팅
   const timestampElements = document.querySelectorAll("[data-timestamp]");
   timestampElements.forEach((el) => {
-    const timestamp = parseInt(el.getAttribute("data-timestamp"));
-    if (timestamp) {
-      el.textContent = formatDateTime(timestamp);
+    const raw = el.getAttribute("data-timestamp");
+    if (raw) {
+      // 숫자형이면 parseInt, 아니면 문자열 그대로
+      const value = /^\d+$/.test(raw) ? parseInt(raw) : raw;
+      el.textContent = formatDateTime(value);
     }
   });
 

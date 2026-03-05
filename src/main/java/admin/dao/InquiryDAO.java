@@ -1,5 +1,6 @@
 package admin.dao;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,7 +110,12 @@ public class InquiryDAO {
 
         for (InquiryDTO inq : inquiryList) {
             InquiryDTO joined = copyInquiry(inq);
-            UserDTO user = ud.findByUserNumber(inq.getUserNumber());
+            UserDTO user = null;
+            try {
+                user = ud.findByUserNumber(inq.getUserNumber());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             joined.setUserName(user != null ? user.getUserName() : "알 수 없음");
             joined.setEmail(mu.maskEmail(user != null ? user.getEmail() : ""));
@@ -128,7 +134,12 @@ public class InquiryDAO {
         admin.util.MaskUtil mu = new admin.util.MaskUtil();
 
         InquiryDTO joined = copyInquiry(inq);
-        UserDTO user = ud.findByUserNumber(inq.getUserNumber());
+        UserDTO user = null;
+        try {
+            user = ud.findByUserNumber(inq.getUserNumber());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         joined.setUserName(user != null ? user.getUserName() : "알 수 없음");
         joined.setEmail(mu.maskEmail(user != null ? user.getEmail() : ""));
