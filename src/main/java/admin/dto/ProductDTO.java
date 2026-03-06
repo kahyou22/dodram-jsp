@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 상품 정보를 담는 DTO
+ * 상품 정보를 담는 DTO (products 테이블과 매핑)
  */
 @Getter
 @Setter
@@ -31,18 +31,18 @@ public class ProductDTO {
         public String getLabel() { return label; }
     }
 
-    private int productNumber;
-    private int categoryNumber;
-    private String name;
-    private String description;
-    private int price;
-    private String status; // Status enum의 name() 값
-    private String thumbnailImage;
-    private String origin;
-    private int weight;
-    private List<String> detailImages;
-    private long createdAt;
-    private long updatedAt;
+    private long productNumber;    // product_num (BIGINT)
+    private int categoryNumber;    // category_num
+    private String name;           // name
+    private String description;    // description
+    private int price;             // price
+    private String status;         // status (Status enum의 name() 값)
+    private String thumbnailImage; // thumbnail_image
+    private String origin;         // origin
+    private int weight;            // weight
+    private List<String> detailImages; // product_images 테이블에서 조인
+    private String createdAt;      // created_at (DATETIME → String)
+    private String updatedAt;      // updated_at (DATETIME → String)
 
     /** 상태 키에 해당하는 한글 라벨 */
     public String getStatusLabel() {

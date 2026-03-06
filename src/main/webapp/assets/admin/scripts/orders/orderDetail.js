@@ -101,16 +101,23 @@ function initOrderDelete() {
 function initTimestamps() {
   const timestampElements = document.querySelectorAll("[data-timestamp]");
   timestampElements.forEach((el) => {
-    const ts = parseInt(el.dataset.timestamp);
-    if (!ts || isNaN(ts)) return;
+    const raw = el.dataset.timestamp;
+    if (!raw) return;
 
-    const date = new Date(ts);
-    el.textContent = date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    // 숫자형이면 parseInt, 아니면 DATETIME 문자열 그대로 사용
+    const isNumeric = /^\d+$/.test(raw);
+    if (isNumeric) {
+      const date = new Date(parseInt(raw));
+      el.textContent = date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else {
+      // DATETIME 문자열 (예: "2026-01-10 14:30:00") → "YYYY-MM-DD HH:mm"
+      el.textContent = raw.substring(0, 16);
+    }
   });
 }

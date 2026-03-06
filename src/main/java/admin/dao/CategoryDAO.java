@@ -1,68 +1,82 @@
 package admin.dao;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.sql.SQLException;
 import java.util.List;
 
 import admin.dto.CategoryDTO;
+import util.DBUtil;
 
 /**
- * 카테고리 DAO
+ * 카테고리 DAO - DB 연동 (categories 테이블)
  */
 public class CategoryDAO {
 
     private static final CategoryDAO INSTANCE = new CategoryDAO();
-    private final List<CategoryDTO> categories = new ArrayList<>();
 
-    private CategoryDAO() {
-        categories.add(new CategoryDTO(1, "한돈", "신선한 국내산 돼지고기", "🥩",
-                parseTime("2025-01-01T00:00:00Z")));
-        categories.add(new CategoryDTO(2, "한우", "신선한 국내산 한우", "🥓",
-                parseTime("2025-01-01T00:00:00Z")));
-        categories.add(new CategoryDTO(3, "테스트", "테스트", "🚀",
-                parseTime("2025-01-01T00:00:00Z")));
-        categories.add(new CategoryDTO(5, "선물세트", "", "🎁",
-                parseTime("2025-01-10T00:00:00Z")));
-    }
+    private CategoryDAO() {}
 
     public static CategoryDAO getInstance() { return INSTANCE; }
 
-    public List<CategoryDTO> getAll() {
-        return Collections.unmodifiableList(categories);
+    /** categories 테이블 → CategoryDTO RowMapper */
+    private static final util.RowMapper<CategoryDTO> ROW_MAPPER = rs -> {
+        CategoryDTO c = new CategoryDTO();
+        c.setCategoryNumber(rs.getInt("category_num"));
+        c.setName(rs.getString("name"));
+        c.setDescription(rs.getString("description"));
+        c.setIcon(rs.getString("icon"));
+        c.setCreatedAt(rs.getString("created_at"));
+        return c;
+    };
+
+    /** 전체 카테고리 목록 */
+    public List<CategoryDTO> getAll() throws SQLException {
+        String sql = "SELECT category_num, name, description, icon, created_at FROM categories ORDER BY category_num";
+        return DBUtil.executeQuery(sql, null, ROW_MAPPER);
     }
 
-    public CategoryDTO findByNumber(int categoryNumber) {
-        return categories.stream()
-                .filter(c -> c.getCategoryNumber() == categoryNumber)
-                .findFirst().orElse(null);
+    /** 카테고리 번호로 조회 */
+    public CategoryDTO findByNumber(int categoryNumber) throws SQLException {
+        String sql = "SELECT category_num, name, description, icon, created_at FROM categories WHERE category_num = ?";
+        List<CategoryDTO> list = DBUtil.executeQuery(sql, ps -> {
+            ps.setInt(1, categoryNumber);
+        }, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
     }
 
-    /** 카테고리 추가 (번호 자동 부여) */
-    public CategoryDTO add(String name, String description, String icon) {
-        int newNumber = categories.stream()
-                .mapToInt(CategoryDTO::getCategoryNumber).max().orElse(0) + 1;
-        CategoryDTO cat = new CategoryDTO(newNumber, name, description, icon,
-                System.currentTimeMillis());
-        categories.add(cat);
-        return cat;
+    /** 카테고리 추가 */
+    public CategoryDTO add(String name, String description, String icon) throws SQLException {
+        String sql = "INSERT INTO categories (name, description, icon) VALUES (?, ?, ?)";
+        DBUtil.executeUpdate(sql, ps -> {
+            ps.setString(1, name);
+            ps.setString(2, description != null ? description : "");
+            ps.setString(3, icon != null ? icon : "");
+        });
+        // 방금 삽입된 카테고리 조회 (간단하게 name으로)
+        String selectSql = "SELECT category_num, name, description, icon, created_at FROM categories WHERE name = ? ORDER BY category_num DESC LIMIT 1";
+        List<CategoryDTO> list = DBUtil.executeQuery(selectSql, ps -> {
+            ps.setString(1, name);
+        }, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     /** 카테고리 수정 */
-    public boolean update(int categoryNumber, String name, String description, String icon) {
-        CategoryDTO cat = findByNumber(categoryNumber);
-        if (cat == null) return false;
-        if (name != null) cat.setName(name);
-        if (description != null) cat.setDescription(description);
-        if (icon != null) cat.setIcon(icon);
-        return true;
+    public boolean update(int categoryNumber, String name, String description, String icon) throws SQLException {
+        String sql = "UPDATE categories SET name = ?, description = ?, icon = ? WHERE category_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setString(1, name);
+            ps.setString(2, description != null ? description : "");
+            ps.setString(3, icon != null ? icon : "");
+            ps.setInt(4, categoryNumber);
+        });
+        return rows > 0;
     }
 
     /** 카테고리 삭제 */
-    public boolean delete(int categoryNumber) {
-        return categories.removeIf(c -> c.getCategoryNumber() == categoryNumber);
-    }
-
-    private static long parseTime(String iso) {
-        return java.time.Instant.parse(iso).toEpochMilli();
+    public boolean delete(int categoryNumber) throws SQLException {
+        String sql = "DELETE FROM categories WHERE category_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setInt(1, categoryNumber);
+        });
+        return rows > 0;
     }
 }

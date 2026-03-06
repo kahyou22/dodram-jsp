@@ -4,10 +4,15 @@ import { Pagination } from "./../components/pagination.js";
 // 서버에서 내려준 데이터 사용
 const users = window.users || [];
 
-// UTC timestamp를 YYYY-MM-DD로 변환
-function formatDate(timestamp) {
-  if (!timestamp) return "";
-  const date = new Date(timestamp);
+// 날짜를 YYYY-MM-DD로 변환 (DB DATETIME 문자열 또는 timestamp 모두 지원)
+function formatDate(value) {
+  if (!value) return "";
+  // DB DATETIME 문자열인 경우 (예: "2025-01-01 00:00:00")
+  if (typeof value === "string") {
+    return value.substring(0, 10);
+  }
+  // timestamp(number)인 경우 (레거시 호환)
+  const date = new Date(value);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 주문 정보를 담는 DTO
+ * 주문 정보를 담는 DTO (orders 테이블과 매핑)
  */
 @Getter
 @Setter
@@ -36,9 +36,9 @@ public class OrderDTO {
         public String getLabel() { return label; }
     }
 
-    private int orderNumber;
-    private String orderDate;
-    private String orderState; // State enum의 name() 값
+    private long orderNumber;    // order_num (BIGINT)
+    private String orderDate;    // order_date (DATE → String)
+    private String orderState;   // order_state
 
     // 주문자 정보
     private String ordererName;

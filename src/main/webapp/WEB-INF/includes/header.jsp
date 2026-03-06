@@ -8,8 +8,16 @@
                 </h1>
                 <!-- top link -->
                 <div class="top_link">
-                    <a href="${ctx}/member/login">로그인</a>
-                    <a href="${ctx}/member/register">회원가입</a>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.DD_MEMBER_AUTH}">
+                            <span class="member-greeting">${sessionScope.DD_MEMBER_AUTH.name}님</span>
+                            <a href="${ctx}/member/logout">로그아웃</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${ctx}/member/login">로그인</a>
+                            <a href="${ctx}/member/register">회원가입</a>
+                        </c:otherwise>
+                    </c:choose>
                     <a href="${ctx}/service/service">고객센터</a>
                     <a href=""><img src="${ctx}/assets/img/layout/mu_coupon_icon.svg" alt="쿠폰"></a>
                     <a href="${ctx}/member/mypage"><img src="${ctx}/assets/img/layout/mu_mypage_icon.svg"

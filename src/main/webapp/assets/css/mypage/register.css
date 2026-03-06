@@ -460,3 +460,24 @@ main h1 {
 .complete-id strong {
   color: #e83828;
 }
+
+/* 서버 에러 메시지 */
+.register-error-box {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: #fff5f5;
+  border: 1px solid #fdd;
+  border-radius: 4px;
+}
+
+.register-error {
+  color: #e83828;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 헤더 회원 인사 */
+.member-greeting {
+  color: #333;
+  font-weight: 600;
+}

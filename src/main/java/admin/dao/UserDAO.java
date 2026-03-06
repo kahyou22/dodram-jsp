@@ -1,79 +1,83 @@
 package admin.dao;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 
 import admin.dto.UserDTO;
+import util.DBUtil;
 
 /**
- * 사용자 DAO
+ * 사용자 DAO - DB 연동 (members 테이블)
  */
 public class UserDAO {
 
     private static final UserDAO INSTANCE = new UserDAO();
-    private final List<UserDTO> users = new ArrayList<>();
 
-    private UserDAO() {
-        Random rng = new Random(42);
-
-        users.add(new UserDTO(1, "admin", "admin", "admin@jfs.rf.gd",
-                "010-0000-0000", parseTime("2025-01-01T00:00:00Z")));
-        users.add(new UserDTO(2, "kahyou222", "정문주", "kahyou222@gmail.com",
-                "010-0000-0000", parseTime("2025-06-15T09:30:00Z")));
-        users.add(new UserDTO(3, "whyeli", "조휘일", "whyeil@naver.com",
-                "010-0000-0000", parseTime("2025-08-20T14:00:00Z")));
-
-        long lastTs = parseTime("2025-08-20T14:00:00Z");
-        for (int i = 4; i <= 54; i++) {
-            long dayGap = (rng.nextInt(7) + 1) * 24L * 60 * 60 * 1000;
-            lastTs += dayGap;
-            String mid = String.format("%04d", rng.nextInt(10000));
-            String last = String.format("%04d", rng.nextInt(10000));
-            String phone = "010-" + mid + "-" + last;
-            String name = (i % 2 == 0) ? "이름" + i : "름이" + i;
-            users.add(new UserDTO(i, "user_" + i, name,
-                    "user" + i + "@jfs.rf.gd", phone, lastTs));
-        }
-    }
+    private UserDAO() {}
 
     public static UserDAO getInstance() { return INSTANCE; }
 
-    public List<UserDTO> getAll() {
-        return Collections.unmodifiableList(users);
+    /** members 테이블에서 UserDTO로 매핑하는 RowMapper */
+    private static final util.RowMapper<UserDTO> ROW_MAPPER = rs -> {
+        UserDTO u = new UserDTO();
+        u.setUserNumber(rs.getLong("user_num"));
+        u.setUserName(rs.getString("id"));
+        u.setName(rs.getString("name"));
+        u.setEmail(rs.getString("email"));
+        u.setPhoneNumber(rs.getString("phone"));
+        u.setCreatedAt(rs.getString("created_at"));
+        return u;
+    };
+
+    /** 전체 사용자 목록 조회 */
+    public List<UserDTO> getAll() throws SQLException {
+        String sql = "SELECT user_num, id, name, phone, email, created_at FROM members ORDER BY user_num";
+        return DBUtil.executeQuery(sql, null, ROW_MAPPER);
     }
 
-    public UserDTO findByUserNumber(int userNumber) {
-        return users.stream()
-                .filter(u -> u.getUserNumber() == userNumber)
-                .findFirst().orElse(null);
+    /** 사용자 번호(user_num)로 조회 */
+    public UserDTO findByUserNumber(long userNumber) throws SQLException {
+        String sql = "SELECT user_num, id, name, phone, email, created_at FROM members WHERE user_num = ?";
+        List<UserDTO> list = DBUtil.executeQuery(sql, ps -> {
+            ps.setLong(1, userNumber);
+        }, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
     }
 
-    public UserDTO findByUserName(String userName) {
-        return users.stream()
-                .filter(u -> userName.equals(u.getUserName()))
-                .findFirst().orElse(null);
+    /** 아이디(id)로 조회 */
+    public UserDTO findByUserName(String userName) throws SQLException {
+        String sql = "SELECT user_num, id, name, phone, email, created_at FROM members WHERE id = ?";
+        List<UserDTO> list = DBUtil.executeQuery(sql, ps -> {
+            ps.setString(1, userName);
+        }, ROW_MAPPER);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     /** 사용자 정보 수정 */
-    public boolean update(int userNumber, String name, String email, String phoneNumber) {
-        UserDTO user = findByUserNumber(userNumber);
-        if (user == null) return false;
-        if (name != null) user.setName(name);
-        if (email != null) user.setEmail(email);
-        if (phoneNumber != null) user.setPhoneNumber(phoneNumber);
-        return true;
+    public boolean update(long userNumber, String name, String email, String phoneNumber) throws SQLException {
+        String sql = "UPDATE members SET name = ?, email = ?, phone = ? WHERE user_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phoneNumber);
+            ps.setLong(4, userNumber);
+        });
+        return rows > 0;
     }
 
     /** 사용자 삭제 */
-    public boolean delete(int userNumber) {
-        return users.removeIf(u -> u.getUserNumber() == userNumber);
+    public boolean delete(long userNumber) throws SQLException {
+        String sql = "DELETE FROM members WHERE user_num = ?";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setLong(1, userNumber);
+        });
+        return rows > 0;
     }
 
-    public int count() { return users.size(); }
-
-    private static long parseTime(String iso) {
-        return java.time.Instant.parse(iso).toEpochMilli();
+    /** 전체 사용자 수 */
+    public int count() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM members";
+        List<Integer> list = DBUtil.executeQuery(sql, null, rs -> rs.getInt(1));
+        return list.isEmpty() ? 0 : list.get(0);
     }
 }
