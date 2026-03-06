@@ -1,8 +1,9 @@
-name: Deploy to Oracle Cloud
+name: Deploy to Oracle Cloud (dodram-jsp) [DISABLED]
 
+# 비활성화됨 - ROOT 배포 워크플로우(deploy-root.yml)로 대체
+# 수동 실행만 가능
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
