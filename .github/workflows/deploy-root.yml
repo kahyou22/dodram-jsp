@@ -1,8 +1,9 @@
-name: Deploy to Oracle Cloud (ROOT)
+name: Deploy to Oracle Cloud (ROOT) [DISABLED]
 
+# 비활성화됨 - Docker 배포 워크플로우(deploy-docker.yml)로 대체
+# 수동 실행만 가능
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
