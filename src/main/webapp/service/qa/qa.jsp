@@ -9,13 +9,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>신선한 식탁을 즐기다, 도드람몰입니다.</title>
-  <link rel="icon" href="/assets/img/main/favicon.png" type="image/x-icon" />
-  <link rel="stylesheet" href="/assets/css/layout.css" />
-  <link rel="stylesheet" href="/assets/css/service/qa_new.css">
+  <link rel="icon" href="<%=request.getContextPath()%>/assets/img/main/favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/layout.css" />
+  <link rel="stylesheet" href="<%=request.getContextPath()%>/assets/css/service/qa_new.css">
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="/assets/js/layout.js"></script>
+ 
 </head>
 
 <body>
@@ -63,7 +63,7 @@
           <div class="qa-tit">
             <h2>1:1문의</h2>
           </div>
-          <form action="/qa/write" method="post" enctype="multipart/form-data">
+          <form action="<%=request.getContextPath()%>/qa/write" method="post" enctype="multipart/form-data">
           <div class="qa-main-box">
             <div class="qa-table">
               <table>
