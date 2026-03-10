@@ -46,12 +46,8 @@ jobs:
 
             echo "=== Building and deploying with Docker Compose ==="
 
-            # Docker Compose로 빌드 & 재시작 (전체)
+            # Docker Compose로 빌드 & 재시작
             docker compose up -d --build
-
-            # 간단한 추가조치: nginx를 명시적으로 올려서 nginx가 없어서 curl이 000이 되는 상황 방지
-            # (만약 이미 올라와 있으면 아무 영향 없음)
-            docker compose up -d nginx || docker compose start nginx
 
             # 정상 기동 확인 (최대 60초 대기)
             echo "=== Waiting for services to be healthy ==="
