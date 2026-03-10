@@ -46,9 +46,10 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-    ports:
-      - "8081:80"
+    expose:
+      - "80"
     networks:
+      - nginx-proxy
       - dodram-internal
     depends_on:
       - mysql
