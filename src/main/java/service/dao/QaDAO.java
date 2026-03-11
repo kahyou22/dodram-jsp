@@ -1,184 +1,209 @@
-package qa.dao;
+package service.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import qa.dto.QaDTO;
+import service.dto.QaDTO;
 import util.DBConnectionMgr;
 
-	public class QaDAO {
+public class QaDAO {
 
-		// 회원/비회원 구분 없이 글 등록
-	    public int insertQa(QaDTO dto) {
-	        String sql = "INSERT INTO qa(type, title, content, user_num, guest_name, guest_password, guest_email) "
-	                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-	        int result = 0;
+    // 글 등록 (회원/비회원 구분)
+    public int insertQa(QaDTO dto) {
+        String sql = "INSERT INTO qa(type, title, content, user_num, guest_name, guest_password, guest_email) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        int result = 0;
 
-	        try (Connection conn = DBConnectionMgr.getConnection();
-	             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	            // 공통 필수 컬럼
-	            ps.setString(1, dto.getType());
-	            ps.setString(2, dto.getTitle());
-	            ps.setString(3, dto.getContent());
+            ps.setString(1, dto.getType());
+            ps.setString(2, dto.getTitle());
+            ps.setString(3, dto.getContent());
 
-	            if (dto.getUserNum() != null) {
-	                // 회원 글
-	                ps.setLong(4, dto.getUserNum());
-	                ps.setNull(5, java.sql.Types.VARCHAR);
-	                ps.setNull(6, java.sql.Types.VARCHAR);
-	                ps.setNull(7, java.sql.Types.VARCHAR);
-	            } else {
-	                // 비회원 글
-	                ps.setNull(4, java.sql.Types.BIGINT);
-	                ps.setString(5, dto.getGuestName());
+            if (dto.getUserNum() != null) {
+                ps.setLong(4, dto.getUserNum());
+                ps.setNull(5, Types.VARCHAR);
+                ps.setNull(6, Types.VARCHAR);
+                ps.setNull(7, Types.VARCHAR);
+            } else {
+                ps.setNull(4, Types.BIGINT);
+                ps.setString(5, dto.getGuestName());
 
-	                if (dto.getGuestPassword() != null) {
-	                    String hashed = BCrypt.hashpw(dto.getGuestPassword(), BCrypt.gensalt());
-	                    ps.setString(6, hashed);
-	                } else {
-	                    ps.setNull(6, java.sql.Types.VARCHAR);
-	                }
+                if (dto.getGuestPassword() != null) {
+                    String hashed = BCrypt.hashpw(dto.getGuestPassword(), BCrypt.gensalt());
+                    ps.setString(6, hashed);
+                } else {
+                    ps.setNull(6, Types.VARCHAR);
+                }
 
-	                ps.setString(7, dto.getGuestEmail());
-	            }
+                ps.setString(7, dto.getGuestEmail());
+            }
 
-	            result = ps.executeUpdate();
-	            System.out.println("[DAO] insertQa result = " + result);
+            result = ps.executeUpdate();
 
-	        } catch (Exception e) {
-	            System.out.println("[DAO] ⚠ insertQa 예외 발생: " + e.getMessage());
-	            e.printStackTrace();
-	        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	        return result;
-	    }
-	
+        return result;
+    }
 
-	    public List<QaDTO> getQaList(String keyword, String startDate, String endDate, int offset, int size) {
+    // 글 단건 조회
+    public QaDTO findById(long qaNum) {
+        String sql = "SELECT * FROM qa WHERE qa_num = ?";
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	        List<QaDTO> list = new ArrayList<>();
+            ps.setLong(1, qaNum);
+            ResultSet rs = ps.executeQuery();
 
-	        String sql = "SELECT * FROM qa WHERE 1=1 ";
+            if (rs.next()) {
+                QaDTO dto = new QaDTO();
+                dto.setQaNum(rs.getLong("qa_num"));
+                dto.setType(rs.getString("type"));
+                dto.setTitle(rs.getString("title"));
+                dto.setContent(rs.getString("content"));
+                dto.setUserNum(rs.getObject("user_num") != null ? rs.getLong("user_num") : null);
+                dto.setGuestName(rs.getString("guest_name"));
+                dto.setGuestPassword(rs.getString("guest_password"));
+                dto.setGuestEmail(rs.getString("guest_email"));
+                dto.setStatus(rs.getString("status"));
+                dto.setAnswer(rs.getString("answer"));
+                dto.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+                dto.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                return dto;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	        if(keyword != null && !keyword.isEmpty()) {
-	            sql += " AND title LIKE ? ";
-	        }
+    // 글 삭제
+    public int deleteQa(long qaNum) {
+        String sql = "DELETE FROM qa WHERE qa_num = ?";
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	        if(startDate != null && !startDate.isEmpty()) {
-	            sql += " AND DATE(created_at) >= ? ";
-	        }
+            ps.setLong(1, qaNum);
+            return ps.executeUpdate();
 
-	        if(endDate != null && !endDate.isEmpty()) {
-	            sql += " AND DATE(created_at) <= ? ";
-	        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
-	        sql += " ORDER BY qa_num DESC LIMIT ?, ?";
+    // 글 수정
+    public int updateQa(QaDTO dto) {
+        String sql = "UPDATE qa SET type = ?, title = ?, content = ?, updated_at = NOW() WHERE qa_num = ?";
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	        try (Connection conn = DBConnectionMgr.getConnection();
-	             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, dto.getType());
+            ps.setString(2, dto.getTitle());
+            ps.setString(3, dto.getContent());
+            ps.setLong(4, dto.getQaNum());
 
-	            int idx = 1;
+            return ps.executeUpdate();
 
-	            if(keyword != null && !keyword.isEmpty()) {
-	                ps.setString(idx++, "%" + keyword + "%");
-	            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
-	            if(startDate != null && !startDate.isEmpty()) {
-	                ps.setString(idx++, startDate);
-	            }
+    // 비회원 비밀번호 확인 (BCrypt 사용)
+    public boolean checkGuestPassword(long qaNum, String inputPassword) {
+        String sql = "SELECT guest_password FROM qa WHERE qa_num = ?";
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	            if(endDate != null && !endDate.isEmpty()) {
-	                ps.setString(idx++, endDate);
-	            }
+            ps.setLong(1, qaNum);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String dbPwd = rs.getString("guest_password");
+                return dbPwd != null && BCrypt.checkpw(inputPassword, dbPwd);
+            }
 
-	            ps.setInt(idx++, offset);
-	            ps.setInt(idx++, size);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-	            ResultSet rs = ps.executeQuery();
+    // 글 목록
+    public List<QaDTO> getQaList(String keyword, String startDate, String endDate, int offset, int size) {
+        List<QaDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM qa WHERE 1=1 ";
+        if (keyword != null && !keyword.isEmpty()) sql += " AND title LIKE ? ";
+        if (startDate != null && !startDate.isEmpty()) sql += " AND DATE(created_at) >= ? ";
+        if (endDate != null && !endDate.isEmpty()) sql += " AND DATE(created_at) <= ? ";
+        sql += " ORDER BY qa_num DESC LIMIT ?, ?";
 
-	            while (rs.next()) {
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	                QaDTO dto = new QaDTO();
+            int idx = 1;
+            if (keyword != null && !keyword.isEmpty()) ps.setString(idx++, "%" + keyword + "%");
+            if (startDate != null && !startDate.isEmpty()) ps.setString(idx++, startDate);
+            if (endDate != null && !endDate.isEmpty()) ps.setString(idx++, endDate);
+            ps.setInt(idx++, offset);
+            ps.setInt(idx++, size);
 
-	                dto.setQaNum(rs.getLong("qa_num"));
-	                dto.setType(rs.getString("type"));
-	                dto.setTitle(rs.getString("title"));
-	                dto.setContent(rs.getString("content"));
-	                dto.setGuestName(rs.getString("guest_name"));
-	                dto.setUserNum(rs.getObject("user_num") != null ? rs.getLong("user_num") : null);
-	                dto.setStatus(rs.getString("status"));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                QaDTO dto = new QaDTO();
+                dto.setQaNum(rs.getLong("qa_num"));
+                dto.setType(rs.getString("type"));
+                dto.setTitle(rs.getString("title"));
+                dto.setContent(rs.getString("content"));
+                dto.setGuestName(rs.getString("guest_name"));
+                dto.setUserNum(rs.getObject("user_num") != null ? rs.getLong("user_num") : null);
+                dto.setStatus(rs.getString("status"));
+                dto.setCreatedAt(rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+                dto.setAnsweredAt(rs.getTimestamp("answered_at") != null ? rs.getTimestamp("answered_at").toLocalDateTime() : null);
+                dto.setUpdatedAt(rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                list.add(dto);
+            }
 
-	                if(rs.getTimestamp("created_at") != null)
-	                    dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	                if(rs.getTimestamp("answered_at") != null)
-	                    dto.setAnsweredAt(rs.getTimestamp("answered_at").toLocalDateTime());
+        return list;
+    }
 
-	                if(rs.getTimestamp("updated_at") != null)
-	                    dto.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+    // 글 개수
+    public int getQaCount(String keyword, String startDate, String endDate) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM qa WHERE 1=1 ";
+        if (keyword != null && !keyword.isEmpty()) sql += " AND title LIKE ? ";
+        if (startDate != null && !startDate.isEmpty()) sql += " AND DATE(created_at) >= ? ";
+        if (endDate != null && !endDate.isEmpty()) sql += " AND DATE(created_at) <= ? ";
 
-	                list.add(dto);
-	            }
+        try (Connection conn = DBConnectionMgr.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+            int idx = 1;
+            if (keyword != null && !keyword.isEmpty()) ps.setString(idx++, "%" + keyword + "%");
+            if (startDate != null && !startDate.isEmpty()) ps.setString(idx++, startDate);
+            if (endDate != null && !endDate.isEmpty()) ps.setString(idx++, endDate);
 
-	        return list;
-	    }
-	    
-	    public int getQaCount(String keyword, String startDate, String endDate) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) count = rs.getInt(1);
 
-	        int count = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	        String sql = "SELECT COUNT(*) FROM qa WHERE 1=1 ";
-
-	        if(keyword != null && !keyword.isEmpty()) {
-	            sql += " AND title LIKE ? ";
-	        }
-
-	        if(startDate != null && !startDate.isEmpty()) {
-	            sql += " AND DATE(created_at) >= ? ";
-	        }
-
-	        if(endDate != null && !endDate.isEmpty()) {
-	            sql += " AND DATE(created_at) <= ? ";
-	        }
-
-	        try (Connection conn = DBConnectionMgr.getConnection();
-	             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-	            int idx = 1;
-
-	            if(keyword != null && !keyword.isEmpty()) {
-	                ps.setString(idx++, "%" + keyword + "%");
-	            }
-
-	            if(startDate != null && !startDate.isEmpty()) {
-	                ps.setString(idx++, startDate);
-	            }
-
-	            if(endDate != null && !endDate.isEmpty()) {
-	                ps.setString(idx++, endDate);
-	            }
-
-	            ResultSet rs = ps.executeQuery();
-
-	            if(rs.next()) {
-	                count = rs.getInt(1);
-	            }
-
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-
-	        return count;
-	    }
-    
+        return count;
+    }
 }

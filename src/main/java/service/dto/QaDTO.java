@@ -1,4 +1,4 @@
-package qa.dto;
+package service.dto;
 
 import java.time.LocalDateTime;
 

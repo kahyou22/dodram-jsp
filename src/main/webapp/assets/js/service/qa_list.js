@@ -1,11 +1,4 @@
-const secret = document.querySelectorAll(".table-tit a");
 
-secret.forEach(el => {
-    el.addEventListener("click", (e) => {
-        // e.preventDefault();
-        alert("비밀글은 작성자 본인만 확인가능합니다. ");
-    });
-});
 
 $(document).ready(function(){
 
@@ -27,3 +20,19 @@ $(document).ready(function(){
     });
 
 });
+
+
+$('#pwdForm').submit(function(e){
+    e.preventDefault();
+    $.post('${ctx}/qa/checkPassword', $(this).serialize(), function(res){
+        if(res === 'ok'){
+            window.location.href = '${ctx}/qa/view?id=${param.qaNum}&auth=ok';
+        } else {
+            alert('비밀번호가 틀렸습니다.');
+        }
+    });
+});
+
+
+
+

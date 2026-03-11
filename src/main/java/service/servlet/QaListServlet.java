@@ -1,4 +1,4 @@
-package qa.servlet;
+package service.servlet;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import qa.dao.QaDAO;
-import qa.dto.QaDTO;
+import service.dao.QaDAO;
+import service.dto.QaDTO;
 
 @WebServlet("/qa/list")
 public class QaListServlet extends HttpServlet {

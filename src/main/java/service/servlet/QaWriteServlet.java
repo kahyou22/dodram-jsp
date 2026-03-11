@@ -1,4 +1,4 @@
-package qa.servlet;
+package service.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import qa.dao.QaDAO;
-import qa.dto.QaDTO;
+import service.dao.QaDAO;
+import service.dto.QaDTO;
 
 @WebServlet("/qa/write")
 public class QaWriteServlet extends HttpServlet {

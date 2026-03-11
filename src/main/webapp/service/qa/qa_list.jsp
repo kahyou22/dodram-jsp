@@ -27,7 +27,7 @@
 		<div id="minho-qa">
 			<div class="location-wrap">
 				<div class="location-con">
-					<a href="#">HOME</a>>1:1 문의하기
+					<a href="${ctx}/index.jsp">HOME</a>>1:1 문의하기
 				</div>
 			</div>
 			<!--//. location-wrap  -->
@@ -37,9 +37,9 @@
 						<h2>고객센터</h2>
 						<div class="side-box-menu">
 							<ul>
-								<li><a href="#">공지사항</a></li>
-								<li><a href="/service/qa/qa_new.html" class="active">1:1문의</a></li>
-								<li><a href="/service/faq/faq_list.html">FAQ</a></li>
+								<li><a href="${ctx}/service/notice/notice_jsp">공지사항</a></li>
+								<li><a href="${ctx}/qa/write" class="active">1:1문의</a></li>
+								<li><a href="#">FAQ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -73,7 +73,7 @@
 						<div class="qa-search-tit">
 							<h2>1:1문의</h2>
 							<button class="qa-btn">
-								<a href="qa_new.html">1:1문의하기</a>
+								<a href="${ctx}/qa/write">1:1문의하기</a>
 							</button>
 						</div>
 						<form method="get" action="${ctx}/qa/list" id="searchForm">
@@ -126,7 +126,9 @@
 									<tr>
 										<td>${qa.createdAt}</td>
 										<td>[${qa.type}]</td>
-										<td class="table-tit"><a href="#">${qa.title}</a></td>
+										<td class="table-tit">
+										<a href="#" onclick="checkPassword(${qa.qaNum}); return false;">${qa.title}</a>
+										</td>
 										<td><c:choose>
 												<c:when test="${not empty qa.guestName}">
                   									  ${qa.guestName}
