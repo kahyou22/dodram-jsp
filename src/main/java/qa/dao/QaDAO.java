@@ -59,16 +59,87 @@ import util.DBConnectionMgr;
 	        return result;
 	    }
 	
-	    public List<QaDTO> getQaList() {
+//	    public List<QaDTO> getQaList() {
+//	        List<QaDTO> list = new ArrayList<>();
+//	        String sql = "SELECT * FROM qa ORDER BY qa_num DESC"; // 최신 글 순
+//
+//	        try (Connection conn = DBConnectionMgr.getConnection();
+//	             PreparedStatement ps = conn.prepareStatement(sql);
+//	             ResultSet rs = ps.executeQuery()) {
+//
+//	            while (rs.next()) {
+//	                QaDTO dto = new QaDTO();
+//	                dto.setQaNum(rs.getLong("qa_num"));
+//	                dto.setType(rs.getString("type"));
+//	                dto.setTitle(rs.getString("title"));
+//	                dto.setContent(rs.getString("content"));
+//	                dto.setGuestName(rs.getString("guest_name"));
+//	                dto.setUserNum(rs.getObject("user_num") != null ? rs.getLong("user_num") : null);
+//	                dto.setStatus(rs.getString("status"));
+//
+//	                if(rs.getTimestamp("created_at") != null)
+//	                    dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+//	                if(rs.getTimestamp("answered_at") != null)
+//	                    dto.setAnsweredAt(rs.getTimestamp("answered_at").toLocalDateTime());
+//	                if(rs.getTimestamp("updated_at") != null)
+//	                    dto.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+//
+//	                list.add(dto);
+//	            }
+//
+//	        } catch (Exception e) {
+//	            e.printStackTrace();
+//	        }
+//
+//	        return list;
+//	    }
+    
+	    public List<QaDTO> getQaList(String keyword, String startDate, String endDate, int offset, int size) {
+
 	        List<QaDTO> list = new ArrayList<>();
-	        String sql = "SELECT * FROM qa ORDER BY qa_num DESC"; // 최신 글 순
+
+	        String sql = "SELECT * FROM qa WHERE 1=1 ";
+
+	        if(keyword != null && !keyword.isEmpty()) {
+	            sql += " AND title LIKE ? ";
+	        }
+
+	        if(startDate != null && !startDate.isEmpty()) {
+	            sql += " AND DATE(created_at) >= ? ";
+	        }
+
+	        if(endDate != null && !endDate.isEmpty()) {
+	            sql += " AND DATE(created_at) <= ? ";
+	        }
+
+	        sql += " ORDER BY qa_num DESC LIMIT ?, ?";
 
 	        try (Connection conn = DBConnectionMgr.getConnection();
-	             PreparedStatement ps = conn.prepareStatement(sql);
-	             ResultSet rs = ps.executeQuery()) {
+	             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	            int idx = 1;
+
+	            if(keyword != null && !keyword.isEmpty()) {
+	                ps.setString(idx++, "%" + keyword + "%");
+	            }
+
+	            if(startDate != null && !startDate.isEmpty()) {
+	                ps.setString(idx++, startDate);
+	            }
+
+	            if(endDate != null && !endDate.isEmpty()) {
+	                ps.setString(idx++, endDate);
+	            }
+
+	            ps.setInt(idx++, offset);
+	            ps.setInt(idx++, size);
+
+	            ResultSet rs = ps.executeQuery();
 
 	            while (rs.next()) {
+
 	                QaDTO dto = new QaDTO();
+
 	                dto.setQaNum(rs.getLong("qa_num"));
 	                dto.setType(rs.getString("type"));
 	                dto.setTitle(rs.getString("title"));
@@ -79,8 +150,10 @@ import util.DBConnectionMgr;
 
 	                if(rs.getTimestamp("created_at") != null)
 	                    dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+
 	                if(rs.getTimestamp("answered_at") != null)
 	                    dto.setAnsweredAt(rs.getTimestamp("answered_at").toLocalDateTime());
+
 	                if(rs.getTimestamp("updated_at") != null)
 	                    dto.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
 
@@ -93,6 +166,53 @@ import util.DBConnectionMgr;
 
 	        return list;
 	    }
-    
+	    
+	    public int getQaCount(String keyword, String startDate, String endDate) {
+
+	        int count = 0;
+
+	        String sql = "SELECT COUNT(*) FROM qa WHERE 1=1 ";
+
+	        if(keyword != null && !keyword.isEmpty()) {
+	            sql += " AND title LIKE ? ";
+	        }
+
+	        if(startDate != null && !startDate.isEmpty()) {
+	            sql += " AND DATE(created_at) >= ? ";
+	        }
+
+	        if(endDate != null && !endDate.isEmpty()) {
+	            sql += " AND DATE(created_at) <= ? ";
+	        }
+
+	        try (Connection conn = DBConnectionMgr.getConnection();
+	             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+	            int idx = 1;
+
+	            if(keyword != null && !keyword.isEmpty()) {
+	                ps.setString(idx++, "%" + keyword + "%");
+	            }
+
+	            if(startDate != null && !startDate.isEmpty()) {
+	                ps.setString(idx++, startDate);
+	            }
+
+	            if(endDate != null && !endDate.isEmpty()) {
+	                ps.setString(idx++, endDate);
+	            }
+
+	            ResultSet rs = ps.executeQuery();
+
+	            if(rs.next()) {
+	                count = rs.getInt(1);
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        return count;
+	    }
     
 }

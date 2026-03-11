@@ -76,23 +76,31 @@
 								<a href="qa_new.html">1:1문의하기</a>
 							</button>
 						</div>
-						<div class="qa-search-box">
-							<h3>조회기간</h3>
-							<div class="date-box">
-								<button>오늘</button>
-								<button>7일</button>
-								<button>15일</button>
-								<button>1개월</button>
-								<button>3개월</button>
-								<button>1년</button>
-							</div>
-							<input type="text" class="calender">~ <input type="text"
-								class="calender">
-							<button class="search-btn">
-								<span>조회</span>
-							</button>
+						<form method="get" action="${ctx}/qa/list" id="searchForm">
 
-						</div>
+							<div class="qa-search-box">
+
+								<h3>조회기간</h3>
+
+								<div class="date-box">
+									<button type="button" class="date-btn" data-day="0">오늘</button>
+									<button type="button" class="date-btn" data-day="7">7일</button>
+									<button type="button" class="date-btn" data-day="15">15일</button>
+									<button type="button" class="date-btn" data-day="30">1개월</button>
+									<button type="button" class="date-btn" data-day="90">3개월</button>
+									<button type="button" class="date-btn" data-day="365">1년</button>
+								</div>
+
+								<input type="date" name="startDate" id="startDate"> ~ <input
+									type="date" name="endDate" id="endDate"> <input
+									type="text" name="keyword" placeholder="제목 검색">
+
+								<button type="submit" class="search-btn">
+									<span>조회</span>
+								</button>
+
+							</div>
+						</form>
 					</div>
 					<div class="qa-table">
 						<table>
@@ -134,11 +142,20 @@
 					</div>
 					<div class="service-pagination">
 						<ul>
-							<li class="service-active"><a href="#">1</a></li>
-							<!-- <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li> -->
+
+							<c:if test="${page > 1}">
+								<li><a href="?page=${page-1}">이전</a></li>
+							</c:if>
+
+							<c:forEach begin="1" end="${totalPage}" var="i">
+								<li class="${page == i ? 'service-active' : ''}"><a
+									href="?page=${i}">${i}</a></li>
+							</c:forEach>
+
+							<c:if test="${page < totalPage}">
+								<li><a href="?page=${page+1}">다음</a></li>
+							</c:if>
+
 						</ul>
 					</div>
 					<!-- //.service-pagenation -->

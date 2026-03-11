@@ -15,19 +15,34 @@ import qa.dto.QaDTO;
 @WebServlet("/qa/list")
 public class QaListServlet extends HttpServlet {
 
-	private QaDAO dao = new QaDAO();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        String keyword = request.getParameter("keyword");
+        String startDate = request.getParameter("startDate");
+        String endDate = request.getParameter("endDate");
 
-		// 1. DAO에서 목록 가져오기
-		List<QaDTO> qaList = dao.getQaList();
+        int page = 1;
+        int size = 10;
 
-		// 2. request에 속성으로 저장
-		request.setAttribute("qaList", qaList);
+        if(request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
 
-		// 3. JSP로 포워딩
-		request.getRequestDispatcher("/service/qa/qa_list.jsp").forward(request, response);
-	}
+        int offset = (page - 1) * size;
+
+        QaDAO dao = new QaDAO();
+
+        List<QaDTO> qaList = dao.getQaList(keyword, startDate, endDate, offset, size);
+        int totalCount = dao.getQaCount(keyword, startDate, endDate);
+
+        int totalPage = (int)Math.ceil((double)totalCount / size);
+
+        request.setAttribute("qaList", qaList);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPage", totalPage);
+
+       request.getRequestDispatcher("/service/qa/qa_list.jsp").forward(request, response);
+    }
 }
+
