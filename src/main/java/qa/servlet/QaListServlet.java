@@ -15,17 +15,19 @@ import qa.dto.QaDTO;
 @WebServlet("/qa/list")
 public class QaListServlet extends HttpServlet {
 
-    private QaDAO dao = new QaDAO();
+	private QaDAO dao = new QaDAO();
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        List<QaDTO> list = dao.getQaList();
+		// 1. DAO에서 목록 가져오기
+		List<QaDTO> qaList = dao.getQaList();
 
-        request.setAttribute("qaList", list);
+		// 2. request에 속성으로 저장
+		request.setAttribute("qaList", qaList);
 
-        request.getRequestDispatcher("/service/qa/qa_list.jsp")
-               .forward(request, response);
-    }
+		// 3. JSP로 포워딩
+		request.getRequestDispatcher("/service/qa/qa_list.jsp").forward(request, response);
+	}
 }

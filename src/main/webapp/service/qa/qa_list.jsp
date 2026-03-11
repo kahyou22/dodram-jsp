@@ -1,23 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="java.util.List"%>
-<%@ page import="qa.dto.QaDTO"%>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
 <%@ include file="/WEB-INF/includes/init.jsp"%>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>신선한 식탁을 즐기다, 도드람몰입니다.</title>
-<link rel="icon" href="/assets/img/main/favicon.png" type="image/x-icon" />
-<link rel="stylesheet" href="/assets/css/layout.css" />
-<link rel="stylesheet" href="/assets/css/service/qa_list.css">
+<link rel="icon" href="${ctx}/assets/img/main/favicon.png"
+	type="image/x-icon" />
+<link rel="stylesheet" href="${ctx}/assets/css/layout.css" />
+<link rel="stylesheet"
+	href="${ctx}/assets/css/service/service_common.css">
+<link rel="stylesheet" href="${ctx}/assets/css/service/qa_list.css">
 <link rel="stylesheet" as="style" crossorigin
 	href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="/assets/js/layout.js"></script>
 </head>
+
 <body>
 	<%@ include file="/WEB-INF/includes/header.jsp"%>
 	<main>
@@ -70,7 +73,7 @@
 						<div class="qa-search-tit">
 							<h2>1:1문의</h2>
 							<button class="qa-btn">
-								<a href="<%=request.getContextPath()%>/qa/write">1:1문의하기</a>
+								<a href="qa_new.html">1:1문의하기</a>
 							</button>
 						</div>
 						<div class="qa-search-box">
@@ -110,22 +113,25 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="q" items="${qaList}">
+								<c:forEach var="qa" items="${qaList}">
 									<tr>
-										<td>${q.createdAt}</td>
-										<td>[${q.type}]</td>
-										<td class="table-tit"><a
-											href="${pageContext.request.contextPath}/qa/detail?num=${q.qaNum}">
-												${q.title} </a></td>
-										<td>${q.guestName}</td>
-										<td>${q.status}</td>
+										<td>${qa.createdAt}</td>
+										<td>[${qa.type}]</td>
+										<td class="table-tit"><a href="#">${qa.title}</a></td>
+										<td><c:choose>
+												<c:when test="${not empty qa.guestName}">
+                  									  ${qa.guestName}
+               									</c:when>
+												<c:otherwise>
+                    								회원
+                								</c:otherwise>
+											</c:choose></td>
+										<td>${qa.status}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 					</div>
-
-
 					<div class="service-pagination">
 						<ul>
 							<li class="service-active"><a href="#">1</a></li>
@@ -142,7 +148,7 @@
 			<!--//.service-container  -->
 		</div>
 	</main>
-	<script src="/assets/js/service/qa_list.js"></script>
+	<script src="${ctx}/assets/js/service/qa_list.js"></script>
 	<%@ include file="/WEB-INF/includes/footer.jsp"%>
 	<%@ include file="/WEB-INF/includes/sideMenu.jsp"%>
 </body>

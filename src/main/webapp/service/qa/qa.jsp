@@ -32,7 +32,7 @@
             <div class="side-box-menu">
               <ul>
                 <li><a href="#">공지사항</a></li>
-                <li><a href="/service/qa/qa_new.html" class="active">1:1문의</a></li>
+                <li><a href="<%=request.getContextPath()%>/qa/write" class="active">1:1문의</a></li>
                 <li><a href="/service/faq/faq_list.html">FAQ</a></li>
               </ul>
             </div>
@@ -63,7 +63,7 @@
           <div class="qa-tit">
             <h2>1:1문의</h2>
           </div>
-          <form action="<%=request.getContextPath()%>/qa/write" method="post" enctype="multipart/form-data">
+          <form action="<%=request.getContextPath()%>/qa/write" method="post" >
           <div class="qa-main-box">
             <div class="qa-table">
               <table>
@@ -73,19 +73,19 @@
                     <td>
                       <select name="type" id="type">
                         <option value="" disabled selected>문의내용 선택</option>
-                        <option value="MEMBER">회원/정보관리</option>
-                        <option value="ORDER">주문/결제</option>
-                        <option value="DELIVERY">배송</option>
-                        <option value="REFUND">반품/환불/교환/AS</option>
-                        <option value="RECEIPT">영수증/증빙서류</option>
-                        <option value="EVENT">상품/이벤트</option>
-                        <option value="ETC">기타</option>
+                        <option value="회원/정보관리">회원/정보관리</option>
+                        <option value="주문/결제">주문/결제</option>
+                        <option value="배송">배송</option>
+                        <option value="반품/환불/교환/AS">반품/환불/교환/AS</option>
+                        <option value="영수증/증빙서류">영수증/증빙서류</option>
+                        <option value="상품/이벤트">상품/이벤트</option>
+                        <option value="기타">기타</option>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <th>작성자</th>
-                    <td><input type="text" id="guest_name" name="guest_name" required minlength="4" maxlength="20"></td>
+                    <td><input type="text" id="guest_name" name="guest_name" required minlength="2" maxlength="20"></td>
                   </tr>
                   <tr>
                     <th>비밀번호</th>

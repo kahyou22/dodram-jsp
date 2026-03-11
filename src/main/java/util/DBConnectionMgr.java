@@ -9,13 +9,9 @@ public class DBConnectionMgr {
 
 	private static final DBConfig config = DBConfig.getInstance();
 
-	private static final String URL = config.get("jdbc:mysql://localhost:3306/testdb?"
-    		+ "useSSL=false"
-    		+ "&serverTimezone=UTC&"
-    		+ "allowPublicKeyRetrieval=true&"
-    		+ "characterEncoding=UTF-8");
-	private static final String USERNAME = config.get("minho");
-	private static final String PASSWORD = config.get("zjajj899");
+	private static final String URL = config.get("JDBC_URL");
+	private static final String USERNAME = config.get("JDBC_USERNAME");
+	private static final String PASSWORD = config.get("JDBC_PASSWORD");
 
 	static {
 		try {
