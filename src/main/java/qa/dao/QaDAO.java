@@ -59,41 +59,7 @@ import util.DBConnectionMgr;
 	        return result;
 	    }
 	
-//	    public List<QaDTO> getQaList() {
-//	        List<QaDTO> list = new ArrayList<>();
-//	        String sql = "SELECT * FROM qa ORDER BY qa_num DESC"; // 최신 글 순
-//
-//	        try (Connection conn = DBConnectionMgr.getConnection();
-//	             PreparedStatement ps = conn.prepareStatement(sql);
-//	             ResultSet rs = ps.executeQuery()) {
-//
-//	            while (rs.next()) {
-//	                QaDTO dto = new QaDTO();
-//	                dto.setQaNum(rs.getLong("qa_num"));
-//	                dto.setType(rs.getString("type"));
-//	                dto.setTitle(rs.getString("title"));
-//	                dto.setContent(rs.getString("content"));
-//	                dto.setGuestName(rs.getString("guest_name"));
-//	                dto.setUserNum(rs.getObject("user_num") != null ? rs.getLong("user_num") : null);
-//	                dto.setStatus(rs.getString("status"));
-//
-//	                if(rs.getTimestamp("created_at") != null)
-//	                    dto.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-//	                if(rs.getTimestamp("answered_at") != null)
-//	                    dto.setAnsweredAt(rs.getTimestamp("answered_at").toLocalDateTime());
-//	                if(rs.getTimestamp("updated_at") != null)
-//	                    dto.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-//
-//	                list.add(dto);
-//	            }
-//
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        }
-//
-//	        return list;
-//	    }
-    
+
 	    public List<QaDTO> getQaList(String keyword, String startDate, String endDate, int offset, int size) {
 
 	        List<QaDTO> list = new ArrayList<>();

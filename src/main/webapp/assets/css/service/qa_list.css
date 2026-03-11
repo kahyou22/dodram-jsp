@@ -71,18 +71,18 @@
     color: #fff;
 }
 
-#qa-board .calender {
+#qa-board .qa-search-box .calendar {
     padding: 0px 10px;
     height: 35px;
     position: relative;
     width: 150px;
     border: 1px solid rgb(175, 175, 175);
-    background-image: url("/assets/img/service/icon_calendar.png");
+    background-image: url("{ctx}/assets/img/service/icon_calendar.png");
     background-repeat: no-repeat;
     background-position: 100% 50%;
 }
 
-#qa-board .search-btn {
+#qa-board .qa-search-box .search-btn {
     padding: 0px 30px;
     height: 35px;
     background: #E83828;
@@ -96,7 +96,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-image: url("/assets/img/service/btn_goods_search.png");
+    background-image: url("{ctx}/assets/img/service/btn_goods_search.png");
     background-size: cover;
     vertical-align: middle;
     margin-left: 5px;

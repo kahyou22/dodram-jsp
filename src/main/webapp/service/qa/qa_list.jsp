@@ -91,9 +91,10 @@
 									<button type="button" class="date-btn" data-day="365">1년</button>
 								</div>
 
-								<input type="date" name="startDate" id="startDate"> ~ <input
-									type="date" name="endDate" id="endDate"> <input
-									type="text" name="keyword" placeholder="제목 검색">
+								<input class="calendar"  type="text" name="startDate" id="startDate">
+								 ~ 
+								 <input class="calendar" type="text" name="endDate" id="endDate"> 
+								 <input type="text" name="keyword" placeholder="제목 검색">
 
 								<button type="submit" class="search-btn">
 									<span>조회</span>

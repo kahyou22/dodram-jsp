@@ -92,7 +92,7 @@
                     <td>
                       <div class="form-group">
                         <label for="password"></label>
-                        <input type="password" id="guest_password" name="guest_password" required minlength="8"
+                        <input type="password" id="guest_password" name="guest_password" required minlength="4"
                           autocomplete="new-password">
                       </div>
                     </td>
