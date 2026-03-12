@@ -22,17 +22,27 @@ $(document).ready(function(){
 });
 
 
-$('#pwdForm').submit(function(e){
-    e.preventDefault();
-    $.post('${ctx}/qa/checkPassword', $(this).serialize(), function(res){
-        if(res === 'ok'){
-            window.location.href = '${ctx}/qa/view?id=${param.qaNum}&auth=ok';
-        } else {
-            alert('비밀번호가 틀렸습니다.');
+
+
+
+function checkPassword(qaNum){
+
+    const password = prompt("비밀번호를 입력하세요");
+
+    if(password == null) return;
+
+    $.post(ctx + "/qa/checkPassword", {
+        qaNum: qaNum,
+        guestPassword: password
+    }, function(result){
+
+        if(result.trim() === "ok"){
+            location.href = ctx + "/qa/view?id=" + qaNum;
+        }else{
+            alert("비밀번호가 틀렸습니다.");
         }
+
     });
-});
 
-
-
+}
 

@@ -91,10 +91,10 @@
 									<button type="button" class="date-btn" data-day="365">1년</button>
 								</div>
 
-								<input class="calendar"  type="text" name="startDate" id="startDate">
-								 ~ 
-								 <input class="calendar" type="text" name="endDate" id="endDate"> 
-								 <input type="text" name="keyword" placeholder="제목 검색">
+								<input class="calendar" type="text" name="startDate"
+									id="startDate"> ~ <input class="calendar" type="text"
+									name="endDate" id="endDate"> <input type="text"
+									name="keyword" placeholder="제목 검색">
 
 								<button type="submit" class="search-btn">
 									<span>조회</span>
@@ -127,7 +127,8 @@
 										<td>${qa.createdAt}</td>
 										<td>[${qa.type}]</td>
 										<td class="table-tit">
-										<a href="#" onclick="checkPassword(${qa.qaNum}); return false;">${qa.title}</a>
+										<a href="javascript:void(0)"onclick="checkPassword(${qa.qaNum})"> 
+											${qa.title} </a>
 										</td>
 										<td><c:choose>
 												<c:when test="${not empty qa.guestName}">
@@ -169,6 +170,7 @@
 		</div>
 	</main>
 	<script src="${ctx}/assets/js/service/qa_list.js"></script>
+	<script>const ctx = "${ctx}";</script>
 	<%@ include file="/WEB-INF/includes/footer.jsp"%>
 	<%@ include file="/WEB-INF/includes/sideMenu.jsp"%>
 </body>

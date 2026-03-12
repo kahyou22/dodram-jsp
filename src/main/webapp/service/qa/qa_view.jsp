@@ -9,10 +9,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>신선한 식탁을 즐기다, 도드람몰입니다.</title>
-<link rel="icon" href="${ctx}/assets/img/main/favicon.png" type="image/x-icon" />
+<link rel="icon" href="${ctx}/assets/img/main/favicon.png"
+	type="image/x-icon" />
 <link rel="stylesheet" href="${ctx}/assets/css/layout.css" />
 <link rel="stylesheet" href="${ctx}/assets/css/service/qa_sub1.css">
-<link rel="stylesheet" href="${ctx}/assets/css/service/service_common.css">
+<link rel="stylesheet"
+	href="${ctx}/assets/css/service/service_common.css">
 <link rel="stylesheet" as="style" crossorigin
 	href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -84,7 +86,7 @@
 									</c:choose>
 								</span> ${qa.createdAt}
 							</div>
-							<div>조회수: ${qa.views}</div>
+							<div>답변상태: ${qa.status}</div>
 						</div>
 						<div class="secret-body">
 							<div class="secret-q">
@@ -97,14 +99,10 @@
 							</div>
 						</div>
 						<div class="secret-btn">
-							<c:if test="${qa.userNum != null || param.auth == 'ok'}">
-								<a href="${ctx}/qa/edit?id=${qa.qaNum}&auth=ok"><button>수정</button></a>
-								<form action="${ctx}/qa/delete" method="post"
-									style="display: inline">
-									<input type="hidden" name="qaNum" value="${qa.qaNum}" />
-									<button type="submit">삭제</button>
-								</form>
-							</c:if>
+
+							<button onclick="checkPassword(${qa.qaNum}, 'edit')">수정</button>
+							
+							<button onclick="checkPassword(${qa.qaNum}, 'delete')">삭제</button>
 							<a href="${ctx}/qa/list"><button>목록</button></a>
 						</div>
 					</div>
@@ -113,6 +111,10 @@
 			<!--//.service-container  -->
 		</div>
 	</main>
+	<script src="${ctx}/assets/js/service/qa_view.js"></script>
+	<script type="text/javascript">
+	var ctx = "${pageContext.request.contextPath}";
+	</script>
 	<%@ include file="/WEB-INF/includes/footer.jsp"%>
 	<%@ include file="/WEB-INF/includes/sideMenu.jsp"%>
 </body>
