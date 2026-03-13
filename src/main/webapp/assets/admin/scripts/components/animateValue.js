@@ -47,9 +47,12 @@ export function animateValue(el, options = {}) {
   const formatted = formatNumber(to, decimal, useComma);
   const fullText = prefix + formatted + suffix;
 
-  // 컨테이너 설정
+  // 원래 높이 보존 (display 변경 전에 측정)
+  const originalHeight = el.offsetHeight;
   el.textContent = "";
+  el.style.height = originalHeight + "px";
   el.style.display = "inline-flex";
+  el.style.alignItems = "center";
   el.style.overflow = "hidden";
   el.style.verticalAlign = "baseline";
 
