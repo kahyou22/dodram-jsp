@@ -2,6 +2,7 @@ package service.servlet;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,20 +14,20 @@ import service.dto.EventDto;
 
 @WebServlet("/event/view")
 public class EventViewServlet extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int eventId = Integer.parseInt(request.getParameter("id"));
-        try {
-            EventDao dao = new EventDao();
-            EventDto event = dao.getEventById(eventId);
+        int id = Integer.parseInt(request.getParameter("eventId"));
 
-            request.setAttribute("event", event);
-            request.getRequestDispatcher("/service/event/event_view.jsp").forward(request, response);
+        EventDao dao = new EventDao();
+        EventDto dto = dao.selectOne(id);
 
-        } catch (Exception e) {
-            throw new ServletException(e);
-        }
+        request.setAttribute("event", dto);
+
+        RequestDispatcher rd =
+                request.getRequestDispatcher("/service/event/event_view.jsp");
+
+        rd.forward(request, response);
     }
 }
-    
