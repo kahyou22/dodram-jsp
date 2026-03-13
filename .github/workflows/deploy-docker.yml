@@ -42,9 +42,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no \
             ${{ secrets.OCI_USER }}@${{ secrets.OCI_HOST }} << 'DEPLOY_SCRIPT'
 
-            # 프로젝트 내부 전용 네트워크 생성 (이미 있으면 무시)
-            docker network create dodram-internal 2>/dev/null || true
-
             cd ~/dodram-jsp
 
             echo "=== Building and deploying with Docker Compose ==="
