@@ -11,6 +11,10 @@ CREATE TABLE members (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 샘플 데이터
+INSERT INTO members (user_num, id, pw, name, phone, email, created_at) VALUES
+(1, 'admin', '$2a$10$18PghUg2n2PnniPlvkU8Y.LDY9itC55JtMscv9wL66SyJoXejf63W', '정문주', '01011110000', 'kahyou222@gmail.com', '2026-03-13 15:28:09');
+
 -- 회원 테이블 조회
 SELECT * FROM members;
 

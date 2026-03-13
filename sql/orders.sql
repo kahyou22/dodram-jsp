@@ -5,6 +5,7 @@ use dodram_db;
 -- =============================================
 CREATE TABLE orders (
     order_num         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_num          BIGINT UNSIGNED NULL,            -- NULL이면 비회원 주문
     order_date        DATE            NOT NULL,
     order_state       VARCHAR(30)     NOT NULL DEFAULT 'PAYMENT_PENDING',
     orderer_name      VARCHAR(30)     NOT NULL,
@@ -14,8 +15,14 @@ CREATE TABLE orders (
     receiver_phone    VARCHAR(20)     NOT NULL,
     receiver_address  VARCHAR(300)    NOT NULL,
     created_at        DATETIME        DEFAULT CURRENT_TIMESTAMP,
-    updated_at        DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at        DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_num) REFERENCES members(user_num) ON DELETE SET NULL
 );
+
+-- 기존 DB에 컬럼 추가 시:
+-- ALTER TABLE orders ADD COLUMN user_num BIGINT UNSIGNED NULL AFTER order_num;
+-- ALTER TABLE orders ADD CONSTRAINT fk_orders_member FOREIGN KEY (user_num) REFERENCES members(user_num) ON DELETE SET NULL;
 
 -- =============================================
 -- 주문 항목 테이블
@@ -43,8 +50,11 @@ INSERT INTO orders (order_num, order_date, order_state, orderer_name, orderer_ph
 (1006, '2026-01-22', 'PAYMENT_PENDING',      '이름6',  '010-3333-1111', 'user6@jfs.rf.gd',     '이름6',    '010-3333-1111', '대구광역시 수성구 들안로 67, 수성아파트 102동 803호'),
 (1007, '2026-01-25', 'SHIPPING_PENDING',     '조휘일', '010-9876-5432', 'whyeil@naver.com',    '조부모님', '010-7777-2222', '전라남도 순천시 장천로 51, 순천만아파트 3동 201호'),
 (1008, '2026-01-28', 'RETURN_REQUESTED',     '름이7',  '010-8888-4444', 'user7@jfs.rf.gd',     '름이7',    '010-8888-4444', '경기도 고양시 일산동구 중앙로 1036, 웨스턴돔 B1층'),
-(1009, '2026-02-01', 'CANCEL_REQUESTED',     '이름8',  '010-1111-5555', 'user8@jfs.rf.gd',     '이름8',    '010-1111-5555', '울산광역시 남구 삼산로 282, 삼산타운 5동 1501호'),
 (1010, '2026-02-05', 'DELIVERED',            '정문주', '010-1234-5678', 'kahyou222@gmail.com', '정문주',   '010-1234-5678', '서울특별시 강남구 테헤란로 123, 4층 401호');
+
+-- 회원 주문 (user_num = 1)
+INSERT INTO orders (order_num, user_num, order_date, order_state, orderer_name, orderer_phone, orderer_email, receiver_name, receiver_phone, receiver_address) VALUES
+(1009, 1, '2026-02-01', 'CANCEL_REQUESTED', '이름8', '010-1111-5555', 'user8@jfs.rf.gd', '이름8', '010-1111-5555', '울산광역시 남구 삼산로 282, 삼산타운 5동 1501호');
 
 -- =============================================
 -- 샘플 데이터: 주문 항목
@@ -102,6 +112,12 @@ SELECT o.order_num, o.order_date, o.order_state,
   JOIN order_items oi ON o.order_num = oi.order_num
  GROUP BY o.order_num
  ORDER BY o.order_num;
+
+-- 특정 회원의 주문 내역 조회 (마이페이지용)
+-- SELECT * FROM orders WHERE user_num = ? ORDER BY order_date DESC;
+
+-- 비회원 주문 조회 (주문번호 + 이메일)
+-- SELECT * FROM orders WHERE order_num = ? AND orderer_email = ? AND user_num IS NULL;
 
 -- 테이블 삭제 (순서 주의)
 -- DROP TABLE order_items;
