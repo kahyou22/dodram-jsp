@@ -40,6 +40,10 @@ public class OrderDTO {
     private String orderDate;    // order_date (DATE → String)
     private String orderState;   // order_state
 
+    // 주문 회원 정보
+    private Long memberNumber;   // user_num (NULL이면 비회원)
+    private String memberId;     // members.id (LEFT JOIN으로 가져옴)
+
     // 주문자 정보
     private String ordererName;
     private String ordererPhone;

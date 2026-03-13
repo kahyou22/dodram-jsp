@@ -24,6 +24,9 @@ public class OrderDAO {
     private static final util.RowMapper<OrderDTO> ORDER_MAPPER = rs -> {
         OrderDTO o = new OrderDTO();
         o.setOrderNumber(rs.getLong("order_num"));
+        long userNum = rs.getLong("user_num");
+        o.setMemberNumber(rs.wasNull() ? null : userNum);
+        o.setMemberId(rs.getString("member_id"));
         o.setOrderDate(rs.getString("order_date"));
         o.setOrderState(rs.getString("order_state"));
         o.setOrdererName(rs.getString("orderer_name"));
@@ -54,8 +57,11 @@ public class OrderDAO {
 
     /** 전체 주문 목록 (항목 포함) */
     public List<OrderDTO> getAll() throws SQLException {
-        String sql = "SELECT order_num, order_date, order_state, orderer_name, orderer_phone, orderer_email, "
-                   + "receiver_name, receiver_phone, receiver_address FROM orders ORDER BY order_num";
+        String sql = "SELECT o.order_num, o.user_num, m.id AS member_id, "
+                   + "o.order_date, o.order_state, o.orderer_name, o.orderer_phone, o.orderer_email, "
+                   + "o.receiver_name, o.receiver_phone, o.receiver_address "
+                   + "FROM orders o LEFT JOIN members m ON o.user_num = m.user_num "
+                   + "ORDER BY o.order_num";
         List<OrderDTO> list = DBUtil.executeQuery(sql, null, ORDER_MAPPER);
         for (OrderDTO o : list) {
             o.setItems(getItems(o.getOrderNumber()));
@@ -65,8 +71,11 @@ public class OrderDAO {
 
     /** 주문 번호로 조회 (항목 포함) */
     public OrderDTO findByOrderNumber(long orderNumber) throws SQLException {
-        String sql = "SELECT order_num, order_date, order_state, orderer_name, orderer_phone, orderer_email, "
-                   + "receiver_name, receiver_phone, receiver_address FROM orders WHERE order_num = ?";
+        String sql = "SELECT o.order_num, o.user_num, m.id AS member_id, "
+                   + "o.order_date, o.order_state, o.orderer_name, o.orderer_phone, o.orderer_email, "
+                   + "o.receiver_name, o.receiver_phone, o.receiver_address "
+                   + "FROM orders o LEFT JOIN members m ON o.user_num = m.user_num "
+                   + "WHERE o.order_num = ?";
         List<OrderDTO> list = DBUtil.executeQuery(sql, ps -> {
             ps.setLong(1, orderNumber);
         }, ORDER_MAPPER);

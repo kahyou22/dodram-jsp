@@ -42,6 +42,13 @@
                             <div class="popover" data-popover-content="orderNumber"></div>
                         </th>
                         <th class="table-head-cell">
+                            <button class="btn sm ghost header-sort-btn" data-sort-key="ordererName"
+                                data-popover-trigger="ordererName">
+                                <span>주문자</span><i data-lucide="chevrons-up-down" class="header-icon"></i>
+                            </button>
+                            <div class="popover" data-popover-content="ordererName"></div>
+                        </th>
+                        <th class="table-head-cell">
                             <button class="btn sm ghost header-sort-btn" data-sort-key="orderName"
                                 data-popover-trigger="orderName">
                                 <span>주문명</span><i data-lucide="chevrons-up-down" class="header-icon"></i>

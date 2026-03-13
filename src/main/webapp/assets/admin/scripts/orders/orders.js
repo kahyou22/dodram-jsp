@@ -250,9 +250,9 @@ function renderTable() {
 
   // 빈 상태
   if (pageOrders.length === 0) {
-    tbody.innerHTML = `
+        tbody.innerHTML = `
       <tr>
-        <td colspan="7" class="table-cell">
+        <td colspan="8" class="table-cell">
           <div class="empty-state">
             <i data-lucide="package-x" class="empty-state-icon"></i>
             <div class="empty-state-title">주문 내역이 없습니다</div>
@@ -282,6 +282,14 @@ function renderTable() {
     tr.innerHTML = `
       <td class="table-cell">
         <div class="table-cell-wrapper">${o.orderNumber}</div>
+      </td>
+      <td class="table-cell">
+        <div class="table-cell-wrapper orderer-cell">
+          ${o.memberNumber
+            ? `<span class="badge blue sm">회원</span> <span>${escapeHtml(o.memberId)} (${escapeHtml(o.ordererName)})</span>`
+            : `<span class="badge gray sm">비회원</span> <span>${escapeHtml(o.ordererName)}</span>`
+          }
+        </div>
       </td>
       <td class="table-cell order-name-cell">
         <div class="table-cell-wrapper">
@@ -351,6 +359,7 @@ function renderTable() {
     const tr = document.createElement("tr");
     tr.className = "table-row";
     tr.innerHTML = `
+      <td class="table-cell"><div class="table-cell-wrapper">&nbsp;</div></td>
       <td class="table-cell"><div class="table-cell-wrapper">&nbsp;</div></td>
       <td class="table-cell order-name-cell"><div class="table-cell-wrapper">&nbsp;</div></td>
       <td class="table-cell"><div class="table-cell-wrapper">&nbsp;</div></td>

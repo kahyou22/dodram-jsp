@@ -85,6 +85,62 @@
                             <div class="detail-card">
                                 <div class="detail-card-header">
                                     <div class="header-left">
+                                        <div class="header-icon-title"><i data-lucide="user" width="20"></i>
+                                            <h4>주문자 / 수령인 정보</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="customer-info-grid">
+                                    <div class="customer-info-section">
+                                        <h5 class="section-label">주문자</h5>
+                                        <div class="info-row">
+                                            <span class="info-label">회원 구분</span>
+                                            <span class="info-value">
+                                                <c:choose>
+                                                    <c:when test="${not empty order.memberNumber}">
+                                                        <span class="badge blue sm">회원</span>
+                                                        <span>${order.memberId}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge gray sm">비회원</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">이름</span>
+                                            <span class="info-value">${order.ordererName}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">연락처</span>
+                                            <span class="info-value">${order.ordererPhone}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">이메일</span>
+                                            <span class="info-value">${order.ordererEmail}</span>
+                                        </div>
+                                    </div>
+                                    <div class="customer-info-section">
+                                        <h5 class="section-label">수령인</h5>
+                                        <div class="info-row">
+                                            <span class="info-label">이름</span>
+                                            <span class="info-value">${order.receiverName}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">연락처</span>
+                                            <span class="info-value">${order.receiverPhone}</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">주소</span>
+                                            <span class="info-value">${order.receiverAddress}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="detail-card">
+                                <div class="detail-card-header">
+                                    <div class="header-left">
                                         <div class="header-icon-title"><i data-lucide="shopping-cart" width="20"></i>
                                             <h4>주문 상품</h4>
                                         </div>
