@@ -64,4 +64,4 @@ networks:
     external: true
   # 프로젝트 내부 전용 네트워크
   dodram-internal:
-    driver: bridge
+    external: true
