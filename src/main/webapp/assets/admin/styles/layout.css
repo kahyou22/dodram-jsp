@@ -9,7 +9,7 @@
   * {
     box-sizing: border-box;
     transition-property:
-      background-color, border, box-shadow, opacity, width, height;
+      background-color, border, box-shadow, opacity;
     transition-duration: 0.15s;
   }
 

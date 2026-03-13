@@ -8,7 +8,9 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>${pageTitle}</title>
             <link rel="stylesheet" href="${resPath}/admin/styles/globals.css" />
-            <link rel="stylesheet" as="style" crossorigin
+            <link rel="preload" as="font" type="font/woff2" crossorigin
+                href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2" />
+            <link rel="stylesheet" crossorigin
                 href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
             <script src="https://unpkg.com/lucide@latest"></script>
             <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -119,7 +121,7 @@
                 </div>
             </div>
             <script src="https://unpkg.com/lucide@latest"></script>
-            <script>lucide.createIcons();</script>
+            <script>try { lucide.createIcons(); } catch(e) {}</script>
             <script src="${resPath}/admin/scripts/layout.js" type="module"></script>
         </body>
 
