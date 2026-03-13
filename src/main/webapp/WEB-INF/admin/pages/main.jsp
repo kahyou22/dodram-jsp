@@ -13,29 +13,29 @@
                 <div class="card">
                     <div class="card-header"><span>오늘 매출</span></div>
                     <div class="card-content">
-                        <h2>16,777,216원</h2>
-                        <p class="card-trend trend-up">+12.5%</p>
+                        <h2 data-animate-value="16777216" data-animate-suffix="원">0원</h2>
+                        <p class="card-trend trend-up" data-animate-value="12.5" data-animate-prefix="+" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header"><span>오늘 주문</span></div>
                     <div class="card-content">
-                        <h2>384건</h2>
-                        <p class="card-trend trend-up">+8.2%</p>
+                        <h2 data-animate-value="384" data-animate-suffix="건">0건</h2>
+                        <p class="card-trend trend-up" data-animate-value="8.2" data-animate-prefix="+" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header"><span>신규 회원</span></div>
                     <div class="card-content">
-                        <h2>47명</h2>
-                        <p class="card-trend trend-down">-3.1%</p>
+                        <h2 data-animate-value="47" data-animate-suffix="명">0명</h2>
+                        <p class="card-trend trend-down" data-animate-value="3.1" data-animate-prefix="-" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header"><span>총 회원 수</span></div>
                     <div class="card-content">
-                        <h2>32,768명</h2>
-                        <p class="card-trend trend-neutral">+0.1%</p>
+                        <h2 data-animate-value="32768" data-animate-suffix="명">0명</h2>
+                        <p class="card-trend trend-neutral" data-animate-value="0.1" data-animate-prefix="+" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</p>
                     </div>
                 </div>
             </div>
@@ -52,14 +52,14 @@
                 <div class="card grid-colspan-2 xl:grid-colspan-5">
                     <div class="card-header">
                         <span>배송 현황</span>
-                        <span class="shipping-total">총 1,424건</span>
+                        <span class="shipping-total">총 <span data-animate-value="1424" data-animate-suffix="건">0건</span></span>
                     </div>
                     <div class="card-content">
                         <div class="shipping-status-wrapper">
                             <div class="shipping-chart">
                                 <canvas id="shippingDonutChart" width="140" height="140"></canvas>
                                 <div class="shipping-chart-center">
-                                    <span class="chart-center-value">72%</span>
+                                    <span class="chart-center-value" data-animate-value="72" data-animate-suffix="%" data-animate-comma="false">0%</span>
                                     <span class="chart-center-label">완료율</span>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                                     <div class="status-progress-header">
                                         <span class="status-dot preparing"></span>
                                         <span class="status-label">배송 준비</span>
-                                        <span class="status-value">128건</span>
+                                        <span class="status-value" data-animate-value="128" data-animate-suffix="건">0건</span>
                                     </div>
                                     <div class="status-progress-bar">
                                         <div class="status-progress-fill preparing" style="width: 9%"></div>
@@ -78,7 +78,7 @@
                                     <div class="status-progress-header">
                                         <span class="status-dot shipping"></span>
                                         <span class="status-label">배송 중</span>
-                                        <span class="status-value">256건</span>
+                                        <span class="status-value" data-animate-value="256" data-animate-suffix="건">0건</span>
                                     </div>
                                     <div class="status-progress-bar">
                                         <div class="status-progress-fill shipping" style="width: 18%"></div>
@@ -88,7 +88,7 @@
                                     <div class="status-progress-header">
                                         <span class="status-dot delivered"></span>
                                         <span class="status-label">배송 완료</span>
-                                        <span class="status-value">1,024건</span>
+                                        <span class="status-value" data-animate-value="1024" data-animate-suffix="건">0건</span>
                                     </div>
                                     <div class="status-progress-bar">
                                         <div class="status-progress-fill delivered" style="width: 72%"></div>
@@ -98,7 +98,7 @@
                                     <div class="status-progress-header">
                                         <span class="status-dot cancelled"></span>
                                         <span class="status-label">취소/반품</span>
-                                        <span class="status-value">16건</span>
+                                        <span class="status-value" data-animate-value="16" data-animate-suffix="건">0건</span>
                                     </div>
                                     <div class="status-progress-bar">
                                         <div class="status-progress-fill cancelled" style="width: 1%"></div>
@@ -110,21 +110,21 @@
                             <div class="mini-stat-card">
                                 <span class="mini-stat-label">전일 대비</span>
                                 <div class="mini-stat-content">
-                                    <span class="mini-stat-value">+12.5%</span>
+                                    <span class="mini-stat-value" data-animate-value="12.5" data-animate-prefix="+" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</span>
                                     <span class="mini-stat-trend up">▲</span>
                                 </div>
                             </div>
                             <div class="mini-stat-card">
                                 <span class="mini-stat-label">평균 배송</span>
                                 <div class="mini-stat-content">
-                                    <span class="mini-stat-value">1.2일</span>
+                                    <span class="mini-stat-value" data-animate-value="1.2" data-animate-suffix="일" data-animate-decimal="1" data-animate-comma="false">0일</span>
                                     <span class="mini-stat-trend neutral">-</span>
                                 </div>
                             </div>
                             <div class="mini-stat-card">
                                 <span class="mini-stat-label">반품률</span>
                                 <div class="mini-stat-content">
-                                    <span class="mini-stat-value">1.1%</span>
+                                    <span class="mini-stat-value" data-animate-value="1.1" data-animate-suffix="%" data-animate-decimal="1" data-animate-comma="false">0%</span>
                                     <span class="mini-stat-trend down">▼</span>
                                 </div>
                             </div>
@@ -186,8 +186,10 @@
             </div>
         </div>
 
-        <script>
+        <script type="module">
+            import { initAnimateValues } from '${resPath}/admin/scripts/components/animateValue.js';
             document.addEventListener('DOMContentLoaded', function () {
+                initAnimateValues();
                 var canvas = document.getElementById('weeklySalesChart');
                 var ctx = canvas.getContext('2d');
 
