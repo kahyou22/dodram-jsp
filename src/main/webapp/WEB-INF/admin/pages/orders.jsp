@@ -12,19 +12,10 @@
 
         <div class="controls-row">
             <div class="filter-group">
-                <select class="input sm" id="status-filter" disabled>
-                    <option value="">전체 상태</option>
-                    <option value="PAYMENT_PENDING">결제대기</option>
-                    <option value="PREPARING_PRODUCT">상품준비중</option>
-                    <option value="SHIPPING_PENDING">배송대기</option>
-                    <option value="SHIPPING_IN_PROGRESS">배송중</option>
-                    <option value="DELIVERED">배송완료</option>
-                    <option value="CANCEL_REQUESTED">취소접수</option>
-                    <option value="CANCELLING">취소중</option>
-                    <option value="CANCELLED">취소완료</option>
-                    <option value="RETURN_REQUESTED">반품요청</option>
-                    <option value="RETURN_PICKUP_IN_PROGRESS">반품수거중</option>
-                    <option value="RETURNED">반품완료</option>
+                <select class="input sm" id="member-filter">
+                    <option value="">주문자 유형</option>
+                    <option value="member">회원 주문</option>
+                    <option value="guest">비회원 주문</option>
                 </select>
             </div>
             <input type="text" class="input sm" id="search-order" placeholder="주문명으로 검색">

@@ -45,7 +45,7 @@ const orders = window.orders || [];
 let sortState = { key: "orderNumber", dir: "desc", type: "number" };
 let searchKeyword = "";
 let selectedTabStatus = "ALL";
-let selectedFilterStatus = "";
+let selectedMemberFilter = "";
 
 // 팝오버 인스턴스 관리
 let orderMorePopovers = [];
@@ -193,11 +193,11 @@ function initPagination() {
 // ─── 필터 / 검색 ────────────────────────────────────
 
 function initFilters() {
-  const statusFilter = document.getElementById("status-filter");
+  const memberFilter = document.getElementById("member-filter");
   const searchInput = document.getElementById("search-order");
 
-  statusFilter?.addEventListener("change", () => {
-    selectedFilterStatus = statusFilter.value;
+  memberFilter?.addEventListener("change", () => {
+    selectedMemberFilter = memberFilter.value;
     pagination.reset();
     renderTable();
   });
@@ -224,9 +224,11 @@ function renderTable() {
     list = list.filter((o) => o.orderState === selectedTabStatus);
   }
 
-  // 드롭다운 상태 필터
-  if (selectedFilterStatus) {
-    list = list.filter((o) => o.orderState === selectedFilterStatus);
+  // 회원/비회원 필터
+  if (selectedMemberFilter === "member") {
+    list = list.filter((o) => o.memberNumber);
+  } else if (selectedMemberFilter === "guest") {
+    list = list.filter((o) => !o.memberNumber);
   }
 
   // 검색
