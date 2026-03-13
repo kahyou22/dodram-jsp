@@ -38,8 +38,8 @@
 						<div class="side-box-menu">
 							<ul>
 								<li><a href="${ctx}/service/notice/notice_jsp">공지사항</a></li>
-								<li><a href="${ctx}/qa/write" class="active">1:1문의</a></li>
-								<li><a href="#">FAQ</a></li>
+								<li><a href="${ctx}/service/qa/qa.jsp" class="active">1:1문의</a></li>
+								<li><a href="${ctx}/faq/list">FAQ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -93,7 +93,7 @@
 
 								<input class="calendar" type="text" name="startDate"
 									id="startDate"> ~ <input class="calendar" type="text"
-									name="endDate" id="endDate"> <input type="text"
+									name="endDate" id="endDate"> <input class="keyword" type="text"
 									name="keyword" placeholder="제목 검색">
 
 								<button type="submit" class="search-btn">

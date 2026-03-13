@@ -31,9 +31,9 @@
             <h2>고객센터</h2>
             <div class="side-box-menu">
               <ul>
-                <li><a href="#">공지사항</a></li>
-                <li><a href="<%=request.getContextPath()%>/qa/write" class="active">1:1문의</a></li>
-                <li><a href="/service/faq/faq_list.html">FAQ</a></li>
+                <li><a href="${ctx}/service/notice/notice_list.jsp">공지사항</a></li>
+                <li><a href="${ctx}/service/qa/qa.jsp" class="active">1:1문의</a></li>
+                <li><a href="${ctx}/faq/list">FAQ</a></li>
               </ul>
             </div>
           </div>

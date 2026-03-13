@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FaqDTO {
-    private int qa_num;
+    private int qaNum;
     private String type; 
     private String  question; 
     private String answer;

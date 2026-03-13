@@ -36,9 +36,9 @@
 						<h2>고객센터</h2>
 						<div class="side-box-menu">
 							<ul>
-								<li><a href="#">공지사항</a></li>
-								<li><a href="/service/qa/qa_new.html">1:1문의</a></li>
-								<li><a href="/service/faq/faq_list.html" class="active">FAQ</a></li>
+								<li><a href="${ctx}/service/notice/notice_list.jsp">공지사항</a></li>
+								<li><a href="${ctx}/service/qa/qa.jsp">1:1문의</a></li>
+								<li><a href="${ctx}/faq/list" class="active">FAQ</a></li>
 							</ul>
 						</div>
 					</div>
@@ -71,10 +71,13 @@
 					<div class="search-box">
 						<div class="search-left">
 							<h2>자주묻는 질문 검색</h2>
-							<input type="text" placeholder="검색어를 입력하세요">
-							<button type="button">
-								검색<i></i>
-							</button>
+							<form action="${pageContext.request.contextPath}/faq/list"
+								method="get">
+								<input type="text" name="keyword" value="${param.keyword}"
+									placeholder="검색어를 입력하세요"> <input type="hidden"
+									name="category" value="${category}">
+								<button type="submit">검색</button>
+							</form>
 						</div>
 						<div class="search-right">
 							<strong>찾으시는 질문이 없다면?</strong> <a href="/service/qa/qa_new.html"><span>1:1
@@ -88,18 +91,26 @@
 						<div class="faq-content-list">
 							<ul>
 								<c:set var="cat" value="${category}" />
-								<li><a href="FaqServlet?page=1"
-									class="${cat == null || cat == '' ? 'active' : ''}">전체</a></li>
-								<li><a href="FaqServlet?category=회원가입/정보&page=1"
-									class="${cat == '회원가입/정보' ? 'active' : ''}">회원가입/정보</a></li>
-								<li><a href="FaqServlet?category=결제/배송&page=1"
-									class="${cat == '결제/배송' ? 'active' : ''}">결제/배송</a></li>
-								<li><a href="FaqServlet?category=교환/반품/환불&page=1"
-									class="${cat == '교환/반품/환불' ? 'active' : ''}">교환/반품/환불</a></li>
-								<li><a href="FaqServlet?category=마일리지 적립&page=1"
-									class="${cat == '마일리지 적립' ? 'active' : ''}">마일리지 적립</a></li>
-								<li><a href="FaqServlet?category=기타&page=1"
-									class="${cat == '기타' ? 'active' : ''}">기타</a></li>
+
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?page=1"
+										class="${cat == null ? 'active' : ''}">전체</a></li>
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?category=회원가입/정보&page=1"
+										class="${cat == '회원가입/정보' ? 'active' : ''}">회원가입/정보</a></li>
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?category=결제/배송&page=1"
+										class="${cat == '결제/배송' ? 'active' : ''}">결제/배송</a></li>
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?category=교환/반품/환불&page=1"
+										class="${cat == '교환/반품/환불' ? 'active' : ''}">교환/반품/환불</a></li>
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?category=마일리지 적립&page=1"
+										class="${cat == '마일리지 적립' ? 'active' : ''}">마일리지 적립</a></li>
+									<li><a
+										href="${pageContext.request.contextPath}/faq/list?category=기타&page=1"
+										class="${cat == '기타' ? 'active' : ''}">기타</a></li>
+							
 							</ul>
 						</div>
 						<div class="faq-table">
@@ -116,8 +127,10 @@
 										<tr>
 											<td>${faq.qaNum}</td>
 											<td>${faq.type}</td>
-											<td class="faq-cell"><a
-												href="view.jsp?qaNum=${faq.qaNum}">${faq.title}</a></td>
+											<td class="faq-cell">
+											<a href="${pageContext.request.contextPath}/faq/view?qaNum=${faq.qaNum}">
+											${faq.question}</a>
+											</td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -126,10 +139,12 @@
 						<!-- //.faq-table -->
 						<div class="service-pagination">
 							<ul>
-							<c:forEach var="i" begin="1" end="${totalPage}">
-								<li class="${i == currentPage ? 'service-active' : ''}">
-								<a href="FaqServlet?category=${category}&page=${i}">${i}</a>
-								</li>
+								<c:forEach var="i" begin="1" end="${totalPage}">
+									<li class="${i == currentPage ? 'service-active' : ''}">
+									<a href="${pageContext.request.contextPath}/faq/list?category=${category}&keyword=${keyword}&page=${i}">
+									${i}
+									</a>
+									</li>
 								</c:forEach>
 							</ul>
 						</div>

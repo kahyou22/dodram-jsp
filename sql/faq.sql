@@ -1,7 +1,7 @@
 use dodram_db;
 
 CREATE TABLE faq (
-    qa_num INT AUTO_INCREMENT PRIMARY KEY,      -- 글 번호 (자동 증가)
+    qaNum INT AUTO_INCREMENT PRIMARY KEY,      -- 글 번호 (자동 증가)
     type VARCHAR(50) NOT NULL,                  -- 카테고리 (예: "결제/배송")
     question TEXT NOT NULL,             -- 질문 제목
     answer TEXT,                                -- 답변 내용
