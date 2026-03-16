@@ -63,7 +63,7 @@
           <div class="qa-tit">
             <h2>1:1문의</h2>
           </div>
-          <form action="<%=request.getContextPath()%>/qa/write" method="post" >
+          <form action="${ctx}/qa/write" method="post" >
           <div class="qa-main-box">
             <div class="qa-table">
               <table>
@@ -145,7 +145,7 @@
                     <th>자동등록방지</th>
                     <td>
                       <div class="qa-cha">
-                        <img src="/assets/img/service/20251224_172731.png" alt="자동방지">
+                        <img src="${ctx}/assets/img/service/20251224_172731.png" alt="자동방지">
                         <div class="cha-txt">
                           <p>보이는 순서대로 <br>숫자 및 문자를 모두 입력해주세요</p>
                           <input type="text">
