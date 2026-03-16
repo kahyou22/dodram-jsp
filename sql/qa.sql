@@ -6,11 +6,11 @@ use dodram_db;
 -- 키                | 라벨
 -- ------------------+---------------------
 -- MEMBER            | 회원/정보관리
--- ORDER_PAYMENT     | 주문/결제
+-- ORDER     		 | 주문/결제
 -- DELIVERY          | 배송
--- RETURN_EXCHANGE   | 반품/환불/교환/AS
+-- REFUND			 | 반품/환불/교환/AS
 -- RECEIPT           | 영수증/증빙서류
--- PRODUCT_EVENT     | 상품/이벤트
+-- EVENT     		 | 상품/이벤트
 -- ETC               | 기타
 
 -- =============================================
