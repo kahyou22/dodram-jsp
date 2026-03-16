@@ -132,6 +132,7 @@
     text-align: left;
 }
 
+
 #qa-board .qa-table table .table-tit a:hover {
     text-decoration: underline;
 }
@@ -141,7 +142,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-image: url("/assets/img/service/icon_board_secret.png");
+    background-image: url("/dodram-jsp/assets/img/service/icon_board_secret.png");
     background-repeat: no-repeat;
     background-size: contain;
     vertical-align: middle;
