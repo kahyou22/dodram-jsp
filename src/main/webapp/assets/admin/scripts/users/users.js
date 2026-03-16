@@ -1,5 +1,6 @@
 import { Popover } from "./../components/popover.js";
 import { Pagination } from "./../components/pagination.js";
+import { Modal } from "./../components/modal.js";
 
 // 서버에서 내려준 데이터 사용
 const users = window.users || [];
@@ -256,6 +257,83 @@ searchInput.addEventListener("input", (e) => {
   searchState.keyword = e.target.value.trim().toLowerCase();
   pagination.reset();
   renderTable();
+});
+
+// ─── 사용자 추가 모달 ───
+const userAddModal = new Modal("user-add-modal");
+const userAddForm = document.getElementById("user-add-form");
+const userAddSubmitBtn = document.getElementById("user-add-submit-btn");
+
+// 모달 열릴 때 폼 초기화
+userAddModal.addOpenEvent(() => {
+  userAddForm.reset();
+  lucide.createIcons();
+});
+
+// 폼 submit 이벤트
+userAddForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById("add-user-id").value.trim();
+  const password = document.getElementById("add-user-password").value.trim();
+  const name = document.getElementById("add-user-name").value.trim();
+  const email = document.getElementById("add-user-email").value.trim();
+  const phone = document.getElementById("add-user-phone").value.trim();
+
+  // 클라이언트 측 기본 검증
+  if (!id) {
+    alert("아이디를 입력해 주세요.");
+    document.getElementById("add-user-id").focus();
+    return;
+  }
+  if (!password) {
+    alert("비밀번호를 입력해 주세요.");
+    document.getElementById("add-user-password").focus();
+    return;
+  }
+  if (!name) {
+    alert("이름을 입력해 주세요.");
+    document.getElementById("add-user-name").focus();
+    return;
+  }
+  if (!email) {
+    alert("이메일을 입력해 주세요.");
+    document.getElementById("add-user-email").focus();
+    return;
+  }
+
+  // 제출 중 버튼 비활성화
+  userAddSubmitBtn.disabled = true;
+  userAddSubmitBtn.textContent = "처리 중...";
+
+  const params = new URLSearchParams();
+  params.set("action", "create");
+  params.set("id", id);
+  params.set("password", password);
+  params.set("name", name);
+  params.set("email", email);
+  params.set("phone", phone);
+
+  fetch(window.ctx + "/admin/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
+    body: params.toString(),
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      alert(result.message);
+      if (result.success) {
+        userAddModal.close();
+        location.reload();
+      }
+    })
+    .catch(() => alert("요청 중 오류가 발생했습니다."))
+    .finally(() => {
+      userAddSubmitBtn.disabled = false;
+      userAddSubmitBtn.textContent = "추가";
+    });
 });
 
 // 초기 렌더

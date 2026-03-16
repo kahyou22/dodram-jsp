@@ -3,6 +3,8 @@ package admin.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import admin.dto.UserDTO;
 import util.DBUtil;
 
@@ -13,9 +15,12 @@ public class UserDAO {
 
     private static final UserDAO INSTANCE = new UserDAO();
 
-    private UserDAO() {}
+    private UserDAO() {
+    }
 
-    public static UserDAO getInstance() { return INSTANCE; }
+    public static UserDAO getInstance() {
+        return INSTANCE;
+    }
 
     /** members 테이블에서 UserDTO로 매핑하는 RowMapper */
     private static final util.RowMapper<UserDTO> ROW_MAPPER = rs -> {
@@ -79,5 +84,33 @@ public class UserDAO {
         String sql = "SELECT COUNT(*) FROM members";
         List<Integer> list = DBUtil.executeQuery(sql, null, rs -> rs.getInt(1));
         return list.isEmpty() ? 0 : list.get(0);
+    }
+
+    /** 사용자 추가 */
+    public boolean insert(String id, String rawPassword, String name, String email, String phone) throws SQLException {
+        String hashedPw = BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+        String sql = "INSERT INTO members (id, pw, name, phone, email) VALUES (?, ?, ?, ?, ?)";
+        int rows = DBUtil.executeUpdate(sql, ps -> {
+            ps.setString(1, id);
+            ps.setString(2, hashedPw);
+            ps.setString(3, name);
+            ps.setString(4, phone);
+            ps.setString(5, email);
+        });
+        return rows > 0;
+    }
+
+    /** 아이디 중복 확인 */
+    public boolean existsById(String id) throws SQLException {
+        return findByUserName(id) != null;
+    }
+
+    /** 이메일 중복 확인 */
+    public boolean existsByEmail(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
+        List<Integer> list = DBUtil.executeQuery(sql, ps -> {
+            ps.setString(1, email);
+        }, rs -> rs.getInt(1));
+        return !list.isEmpty() && list.get(0) > 0;
     }
 }
