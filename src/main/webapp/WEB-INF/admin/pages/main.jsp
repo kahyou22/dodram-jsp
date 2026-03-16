@@ -145,22 +145,22 @@
                             <div class="order-item">
                                 <div class="order-info"><span class="order-id">4</span><span class="order-product">상품
                                         이름</span></div>
-                                <span class="order-price">45,000원</span>
+                                <span class="order-price" data-animate-value="45000" data-animate-suffix="원">0원</span>
                             </div>
                             <div class="order-item">
                                 <div class="order-info"><span class="order-id">3</span><span class="order-product">상품
                                         이름</span></div>
-                                <span class="order-price">89,000원</span>
+                                <span class="order-price" data-animate-value="89000" data-animate-suffix="원">0원</span>
                             </div>
                             <div class="order-item">
                                 <div class="order-info"><span class="order-id">2</span><span class="order-product">상품
                                         이름</span></div>
-                                <span class="order-price">198,000원</span>
+                                <span class="order-price" data-animate-value="198000" data-animate-suffix="원">0원</span>
                             </div>
                             <div class="order-item">
                                 <div class="order-info"><span class="order-id">1</span><span class="order-product">상품
                                         이름</span></div>
-                                <span class="order-price">32,000원</span>
+                                <span class="order-price" data-animate-value="32000" data-animate-suffix="원">0원</span>
                             </div>
                         </div>
                     </div>
@@ -170,16 +170,16 @@
                     <div class="card-content">
                         <div class="bestseller-list">
                             <div class="bestseller-item"><span class="bestseller-rank">1</span><span
-                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales">1,248개</span>
+                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales" data-animate-value="1248" data-animate-suffix="개">0개</span>
                             </div>
                             <div class="bestseller-item"><span class="bestseller-rank">2</span><span
-                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales">987개</span></div>
+                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales" data-animate-value="987" data-animate-suffix="개">0개</span></div>
                             <div class="bestseller-item"><span class="bestseller-rank">3</span><span
-                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales">654개</span></div>
+                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales" data-animate-value="654" data-animate-suffix="개">0개</span></div>
                             <div class="bestseller-item"><span class="bestseller-rank">4</span><span
-                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales">432개</span></div>
+                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales" data-animate-value="432" data-animate-suffix="개">0개</span></div>
                             <div class="bestseller-item"><span class="bestseller-rank">5</span><span
-                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales">321개</span></div>
+                                    class="bestseller-name">상품 이름</span><span class="bestseller-sales" data-animate-value="321" data-animate-suffix="개">0개</span></div>
                         </div>
                     </div>
                 </div>
