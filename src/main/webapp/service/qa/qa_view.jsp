@@ -74,7 +74,7 @@
 					</div>
 					<div class="secret-txt">
 						<div class="secret-tit">
-							<span>[${qa.type}]</span> <span>${qa.title}</span>
+							[<span class="type">${qa.type}</span>] <span>${qa.title}</span>
 						</div>
 						<div class="secret-name">
 							<div>
@@ -86,7 +86,7 @@
 									</c:choose>
 								</span> ${qa.createdAt}
 							</div>
-							<div>답변상태: ${qa.status}</div>
+							<div><p>답변상태: <span class="status">${qa.status}</span></p></div>
 						</div>
 						<div class="secret-body">
 							<div class="secret-q">
@@ -112,6 +112,7 @@
 		</div>
 	</main>
 	<script src="${ctx}/assets/js/service/qa_view.js"></script>
+	<script src="${ctx}/assets/js/service/qa_map.js"></script>
 	<script type="text/javascript">
 	var ctx = "${pageContext.request.contextPath}";
 	</script>

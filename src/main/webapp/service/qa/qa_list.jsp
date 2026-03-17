@@ -125,7 +125,7 @@
 								<c:forEach var="qa" items="${qaList}">
 									<tr>
 										<td>${qa.createdAt}</td>
-										<td>[${qa.type}]</td>
+										<td class="type">${qa.type}</td>
 										<td class="table-tit">
 										<a href="javascript:void(0)"onclick="checkPassword(${qa.qaNum})"> 
 											${qa.title} </a>
@@ -138,7 +138,7 @@
                     								회원
                 								</c:otherwise>
 											</c:choose></td>
-										<td>${qa.status}</td>
+										<td class="status">${qa.status}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -170,6 +170,7 @@
 		</div>
 	</main>
 	<script src="${ctx}/assets/js/service/qa_list.js"></script>
+	<script src="${ctx}/assets/js/service/qa_map.js"></script>
 	<script>const ctx = "${ctx}";</script>
 	<%@ include file="/WEB-INF/includes/footer.jsp"%>
 	<%@ include file="/WEB-INF/includes/sideMenu.jsp"%>

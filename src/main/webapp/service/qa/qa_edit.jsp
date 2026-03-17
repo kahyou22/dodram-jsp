@@ -83,18 +83,29 @@
 							<div class="edit-form">
 								<label for="type">유형</label> <select name="type" id="type"
 									required>
-									<option value="" disabled ${emptyqa.type ? 'selected' : ''}>문의내용
-										선택</option>
-									<option value="회원/정보관리"
-										${qa.type == '회원/정보관리' ? 'selected' : ''}>회원/정보관리</option>
-									<option value="주문/결제" ${qa.type == '주문/결제' ? 'selected' : ''}>주문/결제</option>
-									<option value="배송" ${qa.type == '배송' ? 'selected' : ''}>배송</option>
-									<option value="반품/환불/교환/AS"
-										${qa.type == '반품/환불/교환/AS' ? 'selected' : ''}>반품/환불/교환/AS</option>
-									<option value="영수증/증빙서류"
-										${qa.type == '영수증/증빙서류' ? 'selected' : ''}>영수증/증빙서류</option>
-									<option value="상품/이벤트" ${qa.type == '상품/이벤트' ? 'selected' : ''}>상품/이벤트</option>
-									<option value="기타" ${qa.type == '기타' ? 'selected' : ''}>기타</option>
+									<option value=""disabled ${emptyqa.type ? 'selected' : ''}>
+										문의내용 선택</option>
+
+									<option value="MEMBER" ${qa.type == 'MEMBER' ? 'selected' : ''}>
+										회원/정보관리</option>
+
+									<option value="ORDER" ${qa.type == 'ORDER' ? 'selected' : ''}>
+										주문/결제</option>
+
+									<option value="DELIVERY"
+										${qa.type == 'DELIVERY' ? 'selected' : ''}>배송</option>
+
+									<option value="REFUND" ${qa.type == 'REFUND' ? 'selected' : ''}>
+										반품/환불/교환/AS</option>
+
+									<option value="RECEIPT"
+										${qa.type == 'RECEIPT' ? 'selected' : ''}>영수증/증빙서류</option>
+
+									<option value="EVENT" ${qa.type == 'EVENT' ? 'selected' : ''}>
+										상품/이벤트</option>
+
+									<option value="ETC" ${qa.type == 'ETC' ? 'selected' : ''}>
+										기타</option>
 								</select><br> <label for="title">제목</label> <input type="text"
 									id="title" name="title" value="${qa.title}" required><br>
 
