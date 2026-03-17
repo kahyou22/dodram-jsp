@@ -18,27 +18,35 @@ const InquiryStatus = Object.freeze({
   },
 });
 
-// 문의 유형 enum
+// 문의 유형 enum (7종 — qa.sql 기준)
 const InquiryType = Object.freeze({
   ALL: {
     key: "ALL",
     label: "전체 유형",
   },
-  PRODUCT: {
-    key: "PRODUCT",
-    label: "상품문의",
+  MEMBER: {
+    key: "MEMBER",
+    label: "회원/정보관리",
+  },
+  ORDER: {
+    key: "ORDER",
+    label: "주문/결제",
   },
   DELIVERY: {
     key: "DELIVERY",
-    label: "배송문의",
+    label: "배송",
   },
-  EXCHANGE: {
-    key: "EXCHANGE",
-    label: "교환/반품",
+  REFUND: {
+    key: "REFUND",
+    label: "반품/환불/교환/AS",
   },
-  PAYMENT: {
-    key: "PAYMENT",
-    label: "결제문의",
+  RECEIPT: {
+    key: "RECEIPT",
+    label: "영수증/증빙서류",
+  },
+  EVENT: {
+    key: "EVENT",
+    label: "상품/이벤트",
   },
   ETC: {
     key: "ETC",
@@ -60,10 +68,12 @@ function getInquiryTypeByKey(key) {
 
 // 유형별 색상 매핑
 const typeColorMap = {
-  PRODUCT: "blue",
+  MEMBER: "blue",
+  ORDER: "violet",
   DELIVERY: "teal",
-  EXCHANGE: "orange",
-  PAYMENT: "violet",
+  REFUND: "orange",
+  RECEIPT: "slate",
+  EVENT: "pink",
   ETC: "gray",
 };
 
@@ -139,7 +149,7 @@ let searchState = {
   keyword: "",
 };
 let typeFilter = "ALL";
-let sortState = { key: "inquiryNumber", dir: "desc", type: "number" };
+let sortState = { key: "qaNum", dir: "desc", type: "number" };
 
 // Pagination 컴포넌트
 const pagination = new Pagination({
@@ -164,16 +174,11 @@ for (const type of Object.values(InquiryType)) {
   typeFilterSelect.appendChild(option);
 }
 
-// 날짜 포맷 함수
-function formatDate(timestamp) {
-  if (!timestamp) return "";
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
+// 날짜 포맷 함수 (DB에서 String 형태로 오므로 간단하게 처리)
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  // "2026-03-17 14:30:00" → "2026-03-17 14:30"
+  return dateStr.length > 16 ? dateStr.substring(0, 16) : dateStr;
 }
 
 // 테이블 렌더링
@@ -196,7 +201,7 @@ function renderTable() {
     list = list.filter(
       (q) =>
         q.title?.toLowerCase().includes(searchState.keyword) ||
-        q.content?.toLowerCase().includes(searchState.keyword),
+        q.writerName?.toLowerCase().includes(searchState.keyword),
     );
   }
 
@@ -216,10 +221,10 @@ function renderTable() {
   const blankCount = pagination.getLimit() - paginatedList.length;
   for (let i = 0; i < blankCount; i++) {
     paginatedList.push({
-      inquiryNumber: "",
+      qaNum: "",
       type: "",
       title: "",
-      userName: "",
+      writerName: "",
       createdAt: "",
       status: "",
     });
@@ -237,9 +242,22 @@ function renderTable() {
   paginatedList.forEach((q) => {
     const tr = document.createElement("tr");
     tr.className = "table-row";
+
+    // 작성자 + 회원/비회원 표시
+    let writerHtml = "";
+    if (q.writerName) {
+      const writerTypeClass = q.writerType === "회원" ? "blue" : "gray";
+      writerHtml = `
+        <div class="writer-cell">
+          <span class="writer-name">${q.writerName}</span>
+          <span class="badge ${writerTypeClass} sm">${q.writerType || ""}</span>
+        </div>
+      `;
+    }
+
     tr.innerHTML = `
       <td class="table-cell">
-        <div class="table-cell-wrapper">${q.inquiryNumber}</div>
+        <div class="table-cell-wrapper">${q.qaNum}</div>
       </td>
       <td class="table-cell">
         ${
@@ -252,7 +270,7 @@ function renderTable() {
         <div class="table-cell-wrapper">${q.title || ""}</div>
       </td>
       <td class="table-cell">
-        <div class="table-cell-wrapper">${q.userName || ""}</div>
+        ${writerHtml}
       </td>
       <td class="table-cell">
         <div class="table-cell-wrapper">${formatDate(q.createdAt)}</div>
@@ -271,12 +289,12 @@ function renderTable() {
       </td>
       <td class="table-cell">
         ${
-          q.inquiryNumber
+          q.qaNum
             ? `
-            <div class="btn ghost icon-only" data-popover-trigger="im-${q.inquiryNumber}">
+            <div class="btn ghost icon-only" data-popover-trigger="im-${q.qaNum}">
               <i data-lucide="ellipsis" width="16"></i>
             </div>
-            <div class="popover" data-popover-content="im-${q.inquiryNumber}"></div>
+            <div class="popover" data-popover-content="im-${q.qaNum}"></div>
             `
             : ""
         }
@@ -285,8 +303,8 @@ function renderTable() {
     tbody.appendChild(tr);
 
     // Popover 생성
-    if (q.inquiryNumber) {
-      const popover = new Popover(`im-${q.inquiryNumber}`);
+    if (q.qaNum) {
+      const popover = new Popover(`im-${q.qaNum}`);
       inquiryMorePopovers.push(popover);
 
       popover.addOpenEvent((e) => {
@@ -294,7 +312,7 @@ function renderTable() {
 
         const content = e.content;
         content.innerHTML = `
-          <a href="${window.pagePath}/detail?id=${q.inquiryNumber}">
+          <a href="${window.pagePath}/detail?id=${q.qaNum}">
             <button class="btn sm ghost">
               <i data-lucide="info"></i>
               <span>상세 보기</span>
@@ -303,7 +321,7 @@ function renderTable() {
           ${
             q.status === "WAITING"
               ? `
-            <a href="${window.pagePath}/detail?id=${q.inquiryNumber}">
+            <a href="${window.pagePath}/detail?id=${q.qaNum}">
               <button class="btn sm ghost">
                 <i data-lucide="send"></i>
                 <span>답변 작성</span>

@@ -16,20 +16,26 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <%-- 유형/상태 배지 색상 --%>
+                <%-- 유형 배지 색상 --%>
                     <c:set var="typeColor" value="gray" />
                     <c:choose>
-                        <c:when test="${inquiry.type == 'PRODUCT'}">
+                        <c:when test="${inquiry.type == 'MEMBER'}">
                             <c:set var="typeColor" value="blue" />
+                        </c:when>
+                        <c:when test="${inquiry.type == 'ORDER'}">
+                            <c:set var="typeColor" value="violet" />
                         </c:when>
                         <c:when test="${inquiry.type == 'DELIVERY'}">
                             <c:set var="typeColor" value="teal" />
                         </c:when>
-                        <c:when test="${inquiry.type == 'EXCHANGE'}">
+                        <c:when test="${inquiry.type == 'REFUND'}">
                             <c:set var="typeColor" value="orange" />
                         </c:when>
-                        <c:when test="${inquiry.type == 'PAYMENT'}">
-                            <c:set var="typeColor" value="violet" />
+                        <c:when test="${inquiry.type == 'RECEIPT'}">
+                            <c:set var="typeColor" value="slate" />
+                        </c:when>
+                        <c:when test="${inquiry.type == 'EVENT'}">
+                            <c:set var="typeColor" value="pink" />
                         </c:when>
                     </c:choose>
                     <c:set var="statusColor" value="${inquiry.status == 'WAITING' ? 'amber' : 'emerald'}" />
@@ -40,27 +46,36 @@
                         <div class="detail-card">
                             <div class="detail-card-header">
                                 <div class="header-left">
-                                    <span class="badge ${typeColor}">${typeLabel}</span>
+                                    <div class="header-badges">
+                                        <span class="badge ${typeColor}">${typeLabel}</span>
+                                        <span class="badge ${inquiry.writerType == '회원' ? 'blue' : 'gray'} outline">${inquiry.writerType}</span>
+                                    </div>
                                     <h3 class="detail-title">${inquiry.title}</h3>
                                 </div>
-                                <span class="badge ${statusColor}">
-                                    <c:choose>
-                                        <c:when test="${inquiry.status == 'WAITING'}"><i data-lucide="clock"
-                                                width="14"></i></c:when>
-                                        <c:otherwise><i data-lucide="check-circle" width="14"></i></c:otherwise>
-                                    </c:choose>
-                                    <span>${statusLabel}</span>
-                                </span>
+                                <div class="header-right-actions">
+                                    <span class="badge ${statusColor}">
+                                        <c:choose>
+                                            <c:when test="${inquiry.status == 'WAITING'}"><i data-lucide="clock"
+                                                    width="14"></i></c:when>
+                                            <c:otherwise><i data-lucide="check-circle" width="14"></i></c:otherwise>
+                                        </c:choose>
+                                        <span>${statusLabel}</span>
+                                    </span>
+                                    <button class="btn sm ghost danger" id="delete-inquiry-btn"
+                                        title="문의 삭제"><i data-lucide="trash-2" width="16"></i></button>
+                                </div>
                             </div>
                             <div class="detail-meta">
                                 <div class="meta-item"><span class="meta-label">작성자</span><span
-                                        class="meta-value">${inquiry.userName}</span></div>
+                                        class="meta-value">${inquiry.writerName}</span></div>
                                 <div class="meta-item"><span class="meta-label">이메일</span><span
-                                        class="meta-value">${inquiry.email}</span></div>
-                                <div class="meta-item"><span class="meta-label">연락처</span><span
-                                        class="meta-value">${inquiry.phone}</span></div>
-                                <div class="meta-item"><span class="meta-label">작성일</span><span class="meta-value"
-                                        data-timestamp="${inquiry.createdAt}"></span></div>
+                                        class="meta-value">${inquiry.writerEmail}</span></div>
+                                <c:if test="${inquiry.writerType == '회원' && not empty inquiry.phone}">
+                                    <div class="meta-item"><span class="meta-label">연락처</span><span
+                                            class="meta-value">${inquiry.phone}</span></div>
+                                </c:if>
+                                <div class="meta-item"><span class="meta-label">작성일</span><span
+                                        class="meta-value">${inquiry.createdAt}</span></div>
                             </div>
                             <div class="detail-content">
                                 <div class="content-label">문의 내용</div>
@@ -72,8 +87,8 @@
                             <div class="answer-header">
                                 <i data-lucide="message-square" width="20"></i>
                                 <h4>관리자 답변</h4>
-                                <c:if test="${inquiry.status == 'ANSWERED'}">
-                                    <span class="answered-at" data-timestamp="${inquiry.answeredAt}"></span>
+                                <c:if test="${inquiry.status == 'ANSWERED' && not empty inquiry.answeredAt}">
+                                    <span class="answered-at">${inquiry.answeredAt}</span>
                                 </c:if>
                             </div>
                             <c:choose>

@@ -14,17 +14,17 @@
         </div>
         <div class="controls-row">
             <div class="type-filter"><select class="input sm" id="type-filter"></select></div>
-            <input type="text" class="input sm" id="search-inquiry" placeholder="제목, 내용으로 검색">
+            <input type="text" class="input sm" id="search-inquiry" placeholder="제목, 작성자로 검색">
         </div>
         <div class="table-container">
             <table class="table">
                 <thead class="table-head">
                     <tr class="table-row">
                         <th class="table-head-cell"><button class="btn sm ghost header-sort-btn"
-                                data-sort-key="inquiryNumber" data-sort-type="number"
-                                data-popover-trigger="inquiryNumber"><span>번호</span><i data-lucide="arrow-down"
+                                data-sort-key="qaNum" data-sort-type="number"
+                                data-popover-trigger="qaNum"><span>번호</span><i data-lucide="arrow-down"
                                     class="header-icon"></i></button>
-                            <div class="popover" data-popover-content="inquiryNumber"></div>
+                            <div class="popover" data-popover-content="qaNum"></div>
                         </th>
                         <th class="table-head-cell"><span>유형</span></th>
                         <th class="table-head-cell"><button class="btn sm ghost header-sort-btn" data-sort-key="title"
@@ -33,12 +33,12 @@
                             <div class="popover" data-popover-content="title"></div>
                         </th>
                         <th class="table-head-cell"><button class="btn sm ghost header-sort-btn"
-                                data-sort-key="userName" data-popover-trigger="userName"><span>작성자</span><i
+                                data-sort-key="writerName" data-popover-trigger="writerName"><span>작성자</span><i
                                     data-lucide="chevrons-up-down" class="header-icon"></i></button>
-                            <div class="popover" data-popover-content="userName"></div>
+                            <div class="popover" data-popover-content="writerName"></div>
                         </th>
                         <th class="table-head-cell"><button class="btn sm ghost header-sort-btn"
-                                data-sort-key="createdAt" data-sort-type="number"
+                                data-sort-key="createdAt"
                                 data-popover-trigger="createdAt"><span>작성일</span><i data-lucide="chevrons-up-down"
                                     class="header-icon"></i></button>
                             <div class="popover" data-popover-content="createdAt"></div>
