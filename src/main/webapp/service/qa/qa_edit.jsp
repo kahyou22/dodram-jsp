@@ -17,7 +17,6 @@
 <link rel="stylesheet"
 	href="${ctx}/assets/css/service/service_common.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/assets/js/layout.js"></script>
 </head>
 
 <body>

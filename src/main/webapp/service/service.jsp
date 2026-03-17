@@ -15,7 +15,6 @@
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="/assets/js/layout.js"></script>
 </head>
 
 <body>
