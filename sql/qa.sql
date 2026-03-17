@@ -53,7 +53,7 @@ CREATE TABLE qa (
 INSERT INTO qa (type, title, content, user_num, status, answer, answered_at, created_at) VALUES
 ('MEMBER', '비밀번호 변경이 안됩니다',
  '마이페이지에서 비밀번호를 변경하려고 하는데\n현재 비밀번호 입력 후 새 비밀번호가 저장이 안됩니다.\n\n확인 부탁드립니다.',
- 2, 'ANSWERED',
+ 1, 'ANSWERED',
  '안녕하세요, 도드람몰입니다.\n\n비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.\n조건을 확인 후 다시 시도해 주시기 바랍니다.\n\n계속 문제가 발생하면 고객센터로 연락주세요.\n\n감사합니다.',
  DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY));
 
