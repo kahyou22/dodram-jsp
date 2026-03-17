@@ -26,7 +26,7 @@ use dodram_db;
 -- =============================================
 CREATE TABLE qa (
     qa_num         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    type           VARCHAR(20)     NOT NULL,                    -- MEMBER, ORDER_PAYMENT, DELIVERY, RETURN_EXCHANGE, RECEIPT, PRODUCT_EVENT, ETC
+    type           VARCHAR(20)     NOT NULL,                    -- MEMBER, ORDER, DELIVERY, REFUND, RECEIPT, EVENT, ETC
     title          VARCHAR(200)    NOT NULL,
     content        TEXT            NOT NULL,
 
@@ -62,15 +62,15 @@ INSERT INTO qa (type, title, content, user_num, status, answer, answered_at, cre
 -- guest_password: BCrypt.hashpw("1234", BCrypt.gensalt())
 -- =============================================
 INSERT INTO qa (type, title, content, user_num, guest_name, guest_password, guest_email, status, answer, answered_at, created_at) VALUES
--- [ORDER_PAYMENT] 주문/결제
-('ORDER_PAYMENT', '결제 오류로 이중결제가 되었습니다',
+-- [ORDER] 주문/결제
+('ORDER', '결제 오류로 이중결제가 되었습니다',
  '카드 결제 시 오류가 발생했는데\n금액이 이중 결제된 것 같습니다.\n\n확인 부탁드립니다.\n\n카드사: 삼성카드\n결제일시: 2026-01-23 14:32',
  NULL, '김영수', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'kimys@gmail.com',
  'ANSWERED',
  '안녕하세요, 도드람몰입니다.\n\n확인 결과 이중결제 건 맞습니다.\n해당 금액은 3-5영업일 내 자동 환불됩니다.\n\n불편을 드려 죄송합니다.\n\n감사합니다.',
  DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
 
-('ORDER_PAYMENT', '카드 할부 가능한가요?',
+('ORDER', '카드 할부 가능한가요?',
  '5만원 이상 결제 시 무이자 할부 가능한지 궁금합니다.\n\n신한카드 사용 예정입니다.',
  NULL, '이지은', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'leeje@naver.com',
  'ANSWERED',
@@ -88,15 +88,15 @@ INSERT INTO qa (type, title, content, user_num, guest_name, guest_password, gues
  NULL, '최수진', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'choisj@naver.com',
  'WAITING', NULL, NULL, NOW()),
 
--- [RETURN_EXCHANGE] 반품/환불/교환/AS
-('RETURN_EXCHANGE', '교환 신청합니다',
+-- [REFUND] 반품/환불/교환/AS
+('REFUND', '교환 신청합니다',
  '안녕하세요.\n\n1월 20일에 받은 목살 400g 제품인데요,\n진공포장이 풀려서 상태가 안좋습니다.\n\n교환 가능할까요?',
  NULL, '정대호', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'jungdh@gmail.com',
  'ANSWERED',
  '안녕하세요, 도드람몰입니다.\n\n불편을 드려 죄송합니다.\n교환 절차 안내드리겠습니다.\n\n수거 후 새 제품으로 재발송 예정이며,\n수거 일정은 별도 문자로 안내드리겠습니다.\n\n감사합니다.',
  DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
 
-('RETURN_EXCHANGE', '반품 요청드립니다',
+('REFUND', '반품 요청드립니다',
  '변심으로 반품 요청드립니다.\n미개봉 상태이고 내일까지 수거 가능합니다.\n\n주문번호: 2026012000789',
  NULL, '한소영', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'hansy@naver.com',
  'WAITING', NULL, NULL, DATE_SUB(NOW(), INTERVAL 2 DAY)),
@@ -109,13 +109,13 @@ INSERT INTO qa (type, title, content, user_num, guest_name, guest_password, gues
  '안녕하세요, 도드람몰입니다.\n\n요청하신 현금영수증 발급 완료되었습니다.\n국세청 홈택스에서 확인 가능합니다.\n\n감사합니다.',
  DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
 
--- [PRODUCT_EVENT] 상품/이벤트
-('PRODUCT_EVENT', '설 선물세트 할인 이벤트 언제 하나요?',
+-- [EVENT] 상품/이벤트
+('EVENT', '설 선물세트 할인 이벤트 언제 하나요?',
  '작년에 설 선물세트 할인 이벤트가 있었는데\n올해도 진행하나요?\n\n미리 알려주시면 감사하겠습니다.',
  NULL, '윤미래', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'yoonmr@gmail.com',
  'WAITING', NULL, NULL, DATE_SUB(NOW(), INTERVAL 1 DAY)),
 
-('PRODUCT_EVENT', '냉동삼겹살 해동방법 문의',
+('EVENT', '냉동삼겹살 해동방법 문의',
  '냉동 삼겹살 구매했는데요,\n해동은 어떻게 하는게 좋을까요?\n\n냉장 해동이 좋은지,\n상온 해동이 좋은지 알려주세요.',
  NULL, '강태우', '$2a$10$ck0jWZ.6ep/4CQ4Bpmuqn.68Xr8DaCYnIaB5aANMb6WXQQHzsClr6', 'kangtw@naver.com',
  'ANSWERED',
