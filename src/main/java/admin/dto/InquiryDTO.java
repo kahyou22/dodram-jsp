@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 문의 정보를 담는 DTO
+ * 1:1 문의 정보를 담는 DTO (qa 테이블과 매핑)
  */
 @Getter
 @Setter
@@ -26,16 +26,18 @@ public class InquiryDTO {
 
         /** 배지 색상 */
         public String getColor() {
-            return this == WAITING ? "warning" : "success";
+            return this == WAITING ? "amber" : "emerald";
         }
     }
 
-    // 문의 유형 enum
+    // 문의 유형 enum (7종 — qa.sql 기준)
     public enum Type {
-        PRODUCT("상품문의"),
-        DELIVERY("배송문의"),
-        EXCHANGE("교환/반품"),
-        PAYMENT("결제문의"),
+        MEMBER("회원/정보관리"),
+        ORDER("주문/결제"),
+        DELIVERY("배송"),
+        REFUND("반품/환불/교환/AS"),
+        RECEIPT("영수증/증빙서류"),
+        EVENT("상품/이벤트"),
         ETC("기타");
 
         private final String label;
@@ -48,29 +50,42 @@ public class InquiryDTO {
         /** 유형별 배지 색상 */
         public String getColor() {
             switch (this) {
-                case PRODUCT:  return "primary";
-                case DELIVERY: return "info";
-                case EXCHANGE: return "danger";
-                case PAYMENT:  return "warning";
-                default:       return "secondary";
+                case MEMBER:   return "blue";
+                case ORDER:    return "violet";
+                case DELIVERY: return "teal";
+                case REFUND:   return "orange";
+                case RECEIPT:  return "slate";
+                case EVENT:    return "pink";
+                default:       return "gray";
             }
         }
     }
 
-    private int inquiryNumber;
-    private String type; // Type enum의 name() 값
+    // --- 기본 필드 (qa 테이블) ---
+    private long qaNum;           // qa_num (PK)
+    private String type;          // Type enum의 name()
     private String title;
     private String content;
-    private int userNumber;
-    private String status; // Status enum의 name() 값
-    private long createdAt;
+
+    // 회원 정보
+    private Long userNum;         // 회원이면 FK, 비회원이면 null
+
+    // 비회원 정보
+    private String guestName;
+    private String guestEmail;
+
+    // 상태/답변
+    private String status;        // Status enum의 name()
     private String answer;
-    private Long answeredAt;
+    private String answeredAt;    // DATETIME → String
+    private String createdAt;     // DATETIME → String
+    private String updatedAt;     // DATETIME → String
 
     // --- enriched 필드 (유저 조인 후 채워짐) ---
-    private String userName;
-    private String email;
-    private String phone;
+    private String writerName;    // 회원 id 또는 비회원 guest_name
+    private String writerEmail;   // 회원 email 또는 비회원 guest_email
+    private String writerType;    // "회원" 또는 "비회원"
+    private String phone;         // 회원인 경우 전화번호
 
     /** 상태 한글 라벨 */
     public String getStatusLabel() {
@@ -86,7 +101,7 @@ public class InquiryDTO {
         try {
             return Status.valueOf(status).getColor();
         } catch (Exception e) {
-            return "secondary";
+            return "gray";
         }
     }
 
@@ -104,7 +119,7 @@ public class InquiryDTO {
         try {
             return Type.valueOf(type).getColor();
         } catch (Exception e) {
-            return "secondary";
+            return "gray";
         }
     }
 }

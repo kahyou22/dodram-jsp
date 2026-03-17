@@ -2,6 +2,7 @@ package admin.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,13 +32,15 @@ public class AdminInquiryDetailServlet extends HttpServlet {
             error = "문의 번호가 필요합니다.";
         } else {
             try {
-                int inquiryNumber = Integer.parseInt(idParam);
-                inquiry = InquiryDAO.getInstance().findWithUser(inquiryNumber);
+                long qaNum = Long.parseLong(idParam);
+                inquiry = InquiryDAO.getInstance().findByQaNum(qaNum);
                 if (inquiry == null) {
                     error = "해당 문의를 찾을 수 없습니다.";
                 }
             } catch (NumberFormatException e) {
                 error = "올바르지 않은 문의 번호입니다.";
+            } catch (SQLException e) {
+                throw new ServletException("문의 상세 조회 중 DB 오류 발생", e);
             }
         }
 
@@ -62,26 +65,40 @@ public class AdminInquiryDetailServlet extends HttpServlet {
 
         String action = request.getParameter("action");
 
-        if ("saveAnswer".equals(action)) {
-            int inquiryNumber = parseInt(request.getParameter("inquiryNumber"), 0);
-            String answer = request.getParameter("answer");
+        try {
+            if ("saveAnswer".equals(action)) {
+                long qaNum = parseLong(request.getParameter("qaNum"), 0);
+                String answer = request.getParameter("answer");
 
-            if (answer == null || answer.trim().isEmpty()) {
-                out.print("{\"success\":false,\"message\":\"답변 내용을 입력해주세요.\"}");
-                return;
+                if (answer == null || answer.trim().isEmpty()) {
+                    out.print("{\"success\":false,\"message\":\"답변 내용을 입력해주세요.\"}");
+                    return;
+                }
+
+                boolean ok = InquiryDAO.getInstance().saveAnswer(qaNum, answer.trim());
+                out.print(ok
+                        ? "{\"success\":true,\"message\":\"답변이 등록되었습니다.\"}"
+                        : "{\"success\":false,\"message\":\"문의를 찾을 수 없습니다.\"}");
+
+            } else if ("delete".equals(action)) {
+                long qaNum = parseLong(request.getParameter("qaNum"), 0);
+
+                boolean ok = InquiryDAO.getInstance().delete(qaNum);
+                out.print(ok
+                        ? "{\"success\":true,\"message\":\"문의가 삭제되었습니다.\"}"
+                        : "{\"success\":false,\"message\":\"문의를 찾을 수 없습니다.\"}");
+
+            } else {
+                response.setStatus(400);
+                out.print("{\"success\":false,\"message\":\"알 수 없는 action입니다.\"}");
             }
-
-            boolean ok = InquiryDAO.getInstance().saveAnswer(inquiryNumber, answer.trim());
-            out.print(ok
-                    ? "{\"success\":true,\"message\":\"답변이 등록되었습니다.\"}"
-                    : "{\"success\":false,\"message\":\"문의를 찾을 수 없습니다.\"}");
-        } else {
-            response.setStatus(400);
-            out.print("{\"success\":false,\"message\":\"알 수 없는 action입니다.\"}");
+        } catch (SQLException e) {
+            response.setStatus(500);
+            out.print("{\"success\":false,\"message\":\"DB 오류가 발생했습니다.\"}");
         }
     }
 
-    private static int parseInt(String s, int defaultVal) {
-        try { return Integer.parseInt(s); } catch (Exception e) { return defaultVal; }
+    private static long parseLong(String s, long defaultVal) {
+        try { return Long.parseLong(s); } catch (Exception e) { return defaultVal; }
     }
 }

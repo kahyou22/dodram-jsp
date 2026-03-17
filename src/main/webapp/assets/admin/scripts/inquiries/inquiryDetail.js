@@ -1,28 +1,5 @@
 import { Modal } from "./../components/modal.js";
 
-// 날짜 포맷 함수
-function formatDateTime(timestamp) {
-  if (!timestamp) return "";
-  const date = new Date(timestamp);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
-}
-
-// 날짜 표시 엘리먼트 업데이트
-function updateDateElements() {
-  const dateElements = document.querySelectorAll("[data-timestamp]");
-  dateElements.forEach((el) => {
-    const timestamp = parseInt(el.getAttribute("data-timestamp"));
-    if (timestamp) {
-      el.textContent = formatDateTime(timestamp);
-    }
-  });
-}
-
 // Modal 컴포넌트 인스턴스 생성
 const answerModal = new Modal("answer-modal");
 
@@ -52,7 +29,7 @@ if (submitAnswerBtn) {
 
     const params = new URLSearchParams();
     params.set("action", "saveAnswer");
-    params.set("inquiryNumber", inquiry.inquiryNumber);
+    params.set("qaNum", inquiry.qaNum);
     params.set("answer", answer);
 
     fetch(window.ctx + "/admin/inquiries/detail", {
@@ -71,8 +48,41 @@ if (submitAnswerBtn) {
   });
 }
 
+// 삭제 버튼
+const deleteBtn = document.getElementById("delete-inquiry-btn");
+
+if (deleteBtn) {
+  deleteBtn.addEventListener("click", () => {
+    const inquiry = window.inquiryDetail;
+    if (!inquiry) return;
+
+    if (!confirm("정말 이 문의를 삭제하시겠습니까?\n삭제 후 복구할 수 없습니다.")) {
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.set("action", "delete");
+    params.set("qaNum", inquiry.qaNum);
+
+    fetch(window.ctx + "/admin/inquiries/detail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+      body: params.toString(),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message);
+        if (data.success) {
+          location.href = window.ctx + "/admin/inquiries";
+        }
+      })
+      .catch(() => alert("요청 중 오류가 발생했습니다."));
+  });
+}
+
 // 초기화
 document.addEventListener("DOMContentLoaded", () => {
-  updateDateElements();
   lucide.createIcons();
 });
